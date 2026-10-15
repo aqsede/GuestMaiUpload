@@ -1,0 +1,12 @@
+services:
+  wedding-photos:
+    build: .
+    container_name: wedding-photos
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - photos:/data
+volumes:
+  photos:

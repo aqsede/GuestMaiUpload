@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin</title>
+<style>
+:root{--bg:#f4f6f3;--ink:#1d2a22;--soft:#5b6b60;--line:#cfd8cd;--btn:#2d4a39}
+@media (prefers-color-scheme:dark){:root{--bg:#141b16;--ink:#e6eee7;--soft:#9aaa9f;--line:#33423a;--btn:#8fc3a1}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif;padding:20px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto 20px}
+h1{margin:0;font:italic 400 1.8rem Georgia,serif}
+button,a.btn{font:inherit;padding:9px 16px;border-radius:8px;border:1px solid var(--btn);background:var(--btn);color:var(--bg);cursor:pointer;text-decoration:none}
+button.ghost{background:none;color:var(--ink);border-color:var(--line)}
+section{max-width:1100px;margin:0 auto 24px}
+.qr{display:flex;gap:20px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:16px}
+.qr svg{width:160px;height:160px;background:#fff;border-radius:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.grid div{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--line)}
+.grid img,.grid video{width:100%;height:100%;object-fit:cover;display:block}
+.grid .x{position:absolute;top:4px;right:4px;padding:2px 8px;background:#000a;border-color:transparent;color:#fff}
+#card{display:none}
+@media print{
+  body *{visibility:hidden}
+  #card,#card *{visibility:visible}
+  #card{display:block;position:absolute;inset:0;text-align:center;padding:40px;color:#000;background:#fff}
+  #card svg{width:70vw;max-width:420px;height:auto}
+  #card h2{font:italic 400 2.4rem Georgia,serif;margin:0 0 6px}
+  #card p{font:1.3rem Georgia,serif;margin:0 0 16px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Admin</h1>
+  <div><a class="btn" href="/admin/zip">Download all (.zip)</a></div>
+</header>
+<section class="qr">
+  <div id="qr"></div>
+  <div>
+    <strong>Table QR code</strong>
+    <div id="url" style="color:var(--soft);word-break:break-all"></div>
+    <p style="margin:10px 0"><button onclick="window.print()">Print table card</button></p>
+  </div>
+</section>
+<section>
+  <p id="count" style="color:var(--soft)"></p>
+  <div class="grid" id="grid"></div>
+</section>
+<div id="card"><h2 id="ct"></h2><p>Scan to share your photos with us</p><div id="cq"></div></div>
+<script>
+async function load() {
+  const d = await (await fetch('/admin/api/list')).json();
+  document.getElementById('title').textContent = d.title;
+  document.getElementById('ct').textContent = d.title;
+  document.getElementById('count').textContent = d.files.length + ' uploads';
+  const g = document.getElementById('grid'); g.innerHTML = '';
+  for (const f of d.files) {
+    const u = '/admin/file/' + encodeURIComponent(f.name);
+    const el = document.createElement('div');
+    el.innerHTML = (f.video ? `<video src="${u}" preload="metadata" controls></video>` : `<a href="${u}" target="_blank"><img src="${u}" loading="lazy" alt=""></a>`)
+      + `<button class="x" title="Delete">✕</button>`;
+    el.querySelector('.x').onclick = async () => {
+      if (confirm('Delete this file permanently?')) { await fetch(u, { method: 'DELETE' }); load(); }
+    };
+    g.append(el);
+  }
+}
+(async () => {
+  const q = await (await fetch('/admin/api/qr')).json();
+  document.getElementById('qr').innerHTML = q.svg;
+  document.getElementById('cq').innerHTML = q.svg;
+  document.getElementById('url').textContent = q.url;
+  load(); setInterval(load, 30000);
+})();
+</script>
+</body>
+</html>

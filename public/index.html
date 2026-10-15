@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Share your photos</title>
+<style>
+:root{--bg:#e8eee7;--ink:#1d2a22;--soft:#5b6b60;--btn:#2d4a39;--btn-ink:#fff;--card:#f7faf6;--line:#c5d0c4;--ok:#2d7a4b;--err:#a83a32}
+@media (prefers-color-scheme:dark){:root{--bg:#141b16;--ink:#e6eee7;--soft:#9aaa9f;--btn:#8fc3a1;--btn-ink:#10201a;--card:#1d2821;--line:#33423a;--ok:#7fd39f;--err:#f08a82}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 Georgia,"Iowan Old Style",serif;padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom);display:flex;flex-direction:column;align-items:center}
+main{width:100%;max-width:440px;padding:40px 0}
+h1{font-size:2.3rem;line-height:1.1;font-weight:400;font-style:italic;margin:0 0 8px;text-wrap:balance}
+p.sub{margin:0 0 28px;color:var(--soft)}
+label.name{display:block;font-size:.95rem;color:var(--soft);margin-bottom:6px}
+input[type=text]{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);margin-bottom:18px}
+.pick{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:22px;border-radius:16px;background:var(--btn);color:var(--btn-ink);font:600 1.25rem system-ui,sans-serif;cursor:pointer;border:0}
+.pick:focus-within,input:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.pick input{position:absolute;opacity:0;width:1px;height:1px}
+.hint{margin:10px 0 0;font:.85rem system-ui,sans-serif;color:var(--soft);text-align:center}
+#status{margin-top:28px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;width:0;background:var(--btn);transition:width .2s}
+.msg{font:1rem system-ui,sans-serif}.ok{color:var(--ok)}.err{color:var(--err)}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.thumbs div{aspect-ratio:1;border-radius:8px;background:var(--card) center/cover;position:relative;overflow:hidden;border:1px solid var(--line)}
+.thumbs div.done::after{content:"✓";position:absolute;inset:auto 4px 4px auto;background:var(--ok);color:#fff;width:20px;height:20px;border-radius:50%;font:700 13px/20px system-ui;text-align:center}
+.thumbs div.fail::after{content:"!";position:absolute;inset:auto 4px 4px auto;background:var(--err);color:#fff;width:20px;height:20px;border-radius:50%;font:700 13px/20px system-ui;text-align:center}
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Share your photos</h1>
+  <p class="sub" id="subtitle"></p>
+  <label class="name" for="name">Your name (optional)</label>
+  <input type="text" id="name" autocomplete="given-name" maxlength="40">
+  <label class="pick">
+    <span>Add photos &amp; videos</span>
+    <input type="file" id="files" accept="image/*,video/*" multiple>
+  </label>
+  <p class="hint">Take a new photo or choose from your gallery. You can pick many at once.</p>
+  <div id="status" aria-live="polite"></div>
+  <div class="thumbs" id="thumbs"></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const nameEl = $('name');
+nameEl.value = localStorage.getItem('guestName') || '';
+fetch('/api/config').then(r => r.json()).then(c => {
+  $('title').textContent = c.title; document.title = c.title;
+  $('subtitle').textContent = c.subtitle;
+});
+
+function send(file, onProg) {
+  return new Promise((resolve) => {
+    const x = new XMLHttpRequest();
+    x.open('POST', '/upload?name=' + encodeURIComponent(nameEl.value.trim()));
+    x.upload.onprogress = (e) => e.lengthComputable && onProg(e.loaded);
+    x.onload = () => resolve(x.status === 200 ? '' : (JSON.parse(x.responseText || '{}').error || 'Upload failed'));
+    x.onerror = () => resolve('Connection lost');
+    const fd = new FormData(); fd.append('file', file); x.send(fd);
+  });
+}
+
+$('files').addEventListener('change', async (e) => {
+  const list = [...e.target.files]; e.target.value = '';
+  if (!list.length) return;
+  localStorage.setItem('guestName', nameEl.value.trim());
+  const total = list.reduce((s, f) => s + f.size, 0);
+  const loaded = new Array(list.length).fill(0);
+  let finished = 0, failed = 0, next = 0, lastErr = '';
+  const st = $('status');
+  st.innerHTML = '<div class="msg" id="t"></div><div class="bar"><i id="b"></i></div>';
+  const paint = () => {
+    $('b').style.width = Math.min(100, loaded.reduce((a, b) => a + b, 0) / total * 100) + '%';
+    $('t').textContent = `Uploading ${finished + failed} of ${list.length}…`;
+  };
+  const tiles = list.map((f) => {
+    const d = document.createElement('div');
+    if (f.type.startsWith('image/')) d.style.backgroundImage = `url(${URL.createObjectURL(f)})`;
+    $('thumbs').prepend(d); return d;
+  });
+  paint();
+  async function worker() {
+    while (next < list.length) {
+      const i = next++;
+      let err = await send(list[i], (l) => { loaded[i] = l; paint(); });
+      if (err) err = await send(list[i], (l) => { loaded[i] = l; paint(); }); // one retry
+      if (err) { failed++; lastErr = err; tiles[i].className = 'fail'; } else { finished++; loaded[i] = list[i].size; tiles[i].className = 'done'; }
+      paint();
+    }
+  }
+  await Promise.all([worker(), worker(), worker()]);
+  st.innerHTML = failed
+    ? `<div class="msg err">${failed} file(s) didn't upload: ${lastErr}. Tap “Add photos” to try again.</div>`
+    : `<div class="msg ok">Thank you! ${finished} uploaded. Add more any time.</div>`;
+});
+</script>
+</body>
+</html>
