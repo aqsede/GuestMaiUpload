@@ -13,6 +13,15 @@ docker compose up -d --build
 - `/` guest app: Home, Album (stories, filters, likes, downloads), Capture, Voice, Note
 - `/admin` (basic auth): gallery of everything incl. **HEIC** (shown as JPEG, original downloadable), delete, **Download all (.zip)**, print table QR card, upload cover photo
 
+## Guests can delete their own uploads
+Each phone/browser gets a random "device signature" (an HttpOnly cookie, set on first visit). Only a hash of it is stored next to each upload, so the device that uploaded a photo, video, voice memo or note can delete it (Album → **Mine**, or the 🗑 button on its card) and nobody else can. You can still delete anything from `/admin`.
+- Items uploaded before this version have no owner, so only `/admin` can delete them.
+- Clearing browser data / switching browser or using a different phone means that device no longer owns its old uploads.
+- With `ALBUM_PUBLIC=false`, guests still see (and can delete) their own uploads via `/api/mine`.
+
+## Voice memories
+Tap the mic → allow the microphone (a 3-2-1 countdown follows the first permission pop-up) → stop → listen → **Send** or **Record again**. If the mic is blocked or unsupported (e.g. in-app browsers), guests get step-by-step help and can choose an audio file instead.
+
 ## HEIC
 iPhone HEIC files are stored untouched. Browsers that can't show HEIC get an automatically generated JPEG (cached in `/data/cache`) for thumbnails, preview and guest downloads. Admin "⬇" and the zip always give the original file.
 

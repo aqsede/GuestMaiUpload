@@ -6,15 +6,19 @@
 <meta name="theme-color" content="#fbf1e1">
 <title>Wedding Memories</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#fbf1e1;--paper:#fffaf2;--gold:#a8823f;--gold2:#d9bd80;--ink:#1e1810;--soft:#7d6d55;--line:#ead9b9;--ok:#2f7a4c;--err:#a8382f}
+:root{--cream:#fbf1e1;--paper:#fffaf2;--gold:#a8823f;--gold2:#d9bd80;--ink:#1e1810;--soft:#7d6d55;--line:#ead9b9;--ok:#2f7a4c;--err:#a8382f;--heart:#c2364a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* author display rules (.big-btn, .pill...) would otherwise beat the hidden attribute */
+[hidden]{display:none!important}
 body{margin:0;font:16px/1.5 Poppins,system-ui,sans-serif;color:var(--ink);min-height:100dvh;background:radial-gradient(120% 55% at 50% 0,#fffdf8,var(--cream) 55%,#f3e0c0)}
 .view{display:none;max-width:480px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 20px 130px}
 .view.on{display:block}
 .serif{font-family:'Playfair Display',Georgia,serif}
 .center{text-align:center}
+.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;pointer-events:none}
+.i.fill{fill:currentColor;stroke:none}
 .pillbrand{display:none;align-items:center;gap:12px;margin:0 auto 14px;width:max-content;max-width:100%;padding:10px 26px;border-radius:40px;background:var(--paper);border:1px solid var(--line);flex-direction:column}
 .pillbrand b{letter-spacing:.3em;font-size:.95rem;color:var(--gold)}.pillbrand small{letter-spacing:.22em;font-size:.65rem;color:var(--gold2)}
 .greet{font-size:1.5rem;direction:rtl;color:var(--gold);margin:6px 0 0;font-family:'Playfair Display',serif}
@@ -29,7 +33,7 @@ body{margin:0;font:16px/1.5 Poppins,system-ui,sans-serif;color:var(--ink);min-he
 .btn .ic{width:54px;height:54px;border-radius:16px;background:#f6e9cf;border:1px solid var(--gold2);display:grid;place-items:center;font-size:1.6rem}
 .btn span:nth-child(2){flex:1;text-align:center}.btn::after{content:"›";font-size:1.8rem;font-weight:400}
 .btn.dark{background:linear-gradient(#2a2118,#15100a);color:#fff;border-color:var(--gold)}
-.btn:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,.chip:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,.chip:focus-visible,.tool:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .top h2{margin:0;font:700 1.4rem 'Playfair Display',serif;letter-spacing:.2em;text-align:center;color:var(--ink)}
 .top h2 small{display:block;font:600 .6rem Poppins;letter-spacing:.25em;color:var(--gold);margin-top:2px}
@@ -44,26 +48,61 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .tabs{display:flex;gap:8px;overflow-x:auto;margin:0 -20px 14px;padding:2px 20px;scrollbar-width:none}
 .chip{flex:none;padding:10px 20px;border-radius:30px;border:1px solid var(--line);background:var(--paper);font:600 .78rem Poppins;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);cursor:pointer}
 .chip.on{background:#1d1710;color:#fff;border-color:#1d1710}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{position:relative;aspect-ratio:4/5;border-radius:26px;overflow:hidden;background:#1d1710;color:#fff}
-.card img,.card video{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
-.card.light{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
-.card .txt{position:absolute;inset:0 0 70px;padding:18px 14px 0;display:flex;flex-direction:column;justify-content:center;gap:10px;font:italic 1rem/1.4 'Playfair Display',serif;overflow:auto}
-.card .txt .big{font-size:2rem;text-align:center;font-style:normal}
-.card audio{width:100%;height:36px}
-.cap{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;gap:6px;padding:30px 10px 10px 14px;background:linear-gradient(transparent,#000a);pointer-events:none}
-.light .cap{background:none}
-.cap>div{flex:1;min-width:0;font-size:.85rem;line-height:1.25}.cap small{display:block;opacity:.8;font-size:.72rem}
-.cap b{font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pill{pointer-events:auto;border:0;border-radius:24px;background:#fffaf2e6;color:var(--ink);padding:8px 12px;font:600 .85rem Poppins;text-decoration:none;cursor:pointer;display:inline-flex;gap:4px}
-.pill.on{color:#c2364a}
+
+/* ---------- album: polaroid-style tiles ----------
+   The picture (or note / voice player) is on top; the name, time and heart sit BELOW it on their own
+   lines, so the text gets the full tile width instead of fighting the buttons for space. */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;grid-auto-flow:dense;align-items:start}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:6px 6px 2px;box-shadow:0 6px 18px #a8823f14;min-width:0}
+.card.wide{grid-column:1/-1}
+.media{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:#1d1710;color:#fff}
+.media img,.media video{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.media .pb{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#0008;color:#fff;display:grid;place-items:center;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.tools{position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:2}
+.tool{width:40px;height:40px;padding:0;border-radius:50%;border:0;background:#fffaf2ee;color:var(--ink);display:grid;place-items:center;cursor:pointer;text-decoration:none;box-shadow:0 2px 8px #0003}
+.tool.del{color:var(--err)}
+.cap{padding:8px 8px 0}
+.who{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;font:600 .88rem/1.3 Poppins;color:var(--ink)}
+.who .ty{margin-right:6px}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+.foot time{font-size:.74rem;color:var(--soft)}
+.like{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 13px;border:0;border-radius:20px;background:#f8ecd6;color:var(--soft);font:600 .85rem Poppins;cursor:pointer}
+.like.on{background:#fde6ea;color:var(--heart)}.like.on .i{fill:currentColor}
+.like.pop .i{animation:pop .35s}
+@keyframes pop{40%{transform:scale(1.45)}}
+/* notes */
+.media.note{background:linear-gradient(#fffdf8,#fbf1e1);border:1px solid var(--line);color:var(--ink)}
+.card.wide .media.note{aspect-ratio:auto;min-height:150px}
+.nt{display:flex;flex-direction:column;width:100%;height:100%;min-height:inherit;padding:12px 14px 12px;text-align:left;background:none;border:0;font:inherit;color:inherit;cursor:pointer}
+.nt .q{font:700 3rem/.8 'Playfair Display',serif;color:var(--gold2);height:26px}
+.nt-t{margin-top:8px;font:italic 400 .98rem/1.42 'Playfair Display',Georgia,serif;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
+.card.wide .nt-t{-webkit-line-clamp:6;font-size:1.05rem;padding-right:4px}
+.nt .more{margin-top:auto;padding-top:8px;font:600 .64rem Poppins;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+/* voice */
+.vo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(120% 90% at 50% 0,#4a3720,#17110a);color:#f6e9cf}
+.vplay{width:68px;height:68px;padding:0;border-radius:50%;border:2px solid var(--gold2);background:#ffffff14;color:#fff;display:grid;place-items:center;cursor:pointer}
+.vplay .i{width:28px;height:28px}
+.vplay .pa{display:none}.vo.playing .vplay .pl{display:none}.vo.playing .vplay .pa{display:block}
+.eq{display:flex;gap:4px;align-items:center;height:26px}
+.eq i{display:block;width:4px;border-radius:2px;background:var(--gold2)}
+.eq i:nth-child(1){height:30%}.eq i:nth-child(2){height:60%}.eq i:nth-child(3){height:100%}.eq i:nth-child(4){height:55%}.eq i:nth-child(5){height:80%}.eq i:nth-child(6){height:40%}.eq i:nth-child(7){height:25%}
+.vo.playing .eq i{animation:eq 1s ease-in-out infinite}
+.vo.playing .eq i:nth-child(2n){animation-delay:.2s}.vo.playing .eq i:nth-child(3n){animation-delay:.4s}
+@keyframes eq{50%{height:100%}}
+.vt{font:500 .78rem Poppins;letter-spacing:.05em}
+.vo .pg{position:absolute;left:0;right:0;bottom:0;height:4px;background:#ffffff22}.vo .pg i{display:block;height:100%;width:0;background:var(--gold2)}
+/* private-album notice + empty state */
+.notice{background:var(--paper);border:1px dashed var(--gold2);border-radius:18px;padding:12px 16px;font-size:.85rem;color:var(--soft);margin-bottom:14px}
 .empty{grid-column:1/-1;text-align:center;color:var(--soft);padding:40px 10px}
+
 label.f{display:block;font-size:.85rem;color:var(--soft);margin:14px 0 6px}
 input.nm,textarea{width:100%;font:inherit;padding:13px 16px;border-radius:16px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
 textarea{min-height:150px;resize:vertical}
 .chips{display:flex;flex-wrap:wrap;gap:8px}.chips .chip{padding:8px 14px;font-size:.7rem}
 .big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;padding:20px;border-radius:22px;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;font:600 1.1rem Poppins;cursor:pointer;position:relative}
 .big-btn.alt{background:var(--paper);color:var(--gold);border:1px solid var(--gold2)}
+.big-btn.danger{background:linear-gradient(#b8443a,#97312a)}
+.big-btn:disabled{opacity:.55;cursor:default}
 .big-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
 .big-btn:focus-within{outline:3px solid var(--gold);outline-offset:2px}
 .hint{font-size:.82rem;color:var(--soft);text-align:center;margin:10px 0 0}
@@ -73,21 +112,68 @@ textarea{min-height:150px;resize:vertical}
 .thumbs div{aspect-ratio:1;border-radius:12px;background:var(--line) center/cover;position:relative;overflow:hidden}
 .thumbs .done::after,.thumbs .fail::after{position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;color:#fff;font:700 13px/20px Poppins;text-align:center}
 .thumbs .done::after{content:"✓";background:var(--ok)}.thumbs .fail::after{content:"!";background:var(--err)}
-.rec{width:128px;height:128px;border-radius:50%;border:4px solid var(--gold2);background:#1d1710;color:#fff;font-size:3rem;display:grid;place-items:center;margin:26px auto 10px;cursor:pointer}
+.msg a{color:var(--gold)}
+
+/* ---------- voice ---------- */
+.stage{position:relative;width:164px;height:164px;margin:16px auto 4px}
+.stage .rg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.rg circle{fill:none;stroke-width:5}.rg .trk{stroke:var(--line)}.rg .fg{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+.rec{position:absolute;inset:14px;padding:0;border-radius:50%;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px #1d171040}
+.rec .i{width:48px;height:48px}
+.rec .cdn{font:700 3.4rem/1 'Playfair Display',serif}
 .rec.live{background:#b32d3d;animation:pulse 1.2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 16px #b32d3d33}}
-@media (prefers-reduced-motion:reduce){.rec.live{animation:none}}
-.timer{font:600 1.6rem 'Playfair Display',serif;text-align:center}
+@media (prefers-reduced-motion:reduce){.rec.live,.vo.playing .eq i,.like.pop .i{animation:none}.rg .fg,.bar i{transition:none}}
+.timer{font:600 1.6rem 'Playfair Display',serif;text-align:center}.timer small{font:400 .85rem Poppins;color:var(--soft)}
+.linkbtn{display:block;position:relative;margin:14px auto 0;width:max-content;max-width:100%;background:none;border:0;padding:8px 14px;color:var(--gold);font:600 .85rem Poppins;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:center}
+.linkbtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:16px 18px;margin-top:16px}
+.panel h4{margin:0 0 4px;font:700 1.15rem 'Playfair Display',serif}
+.panel p{margin:0 0 8px;font-size:.88rem;color:var(--soft)}
+.panel ol{margin:8px 0 0;padding-left:20px;font-size:.85rem;color:var(--ink)}.panel li{margin-bottom:6px}
+.rv-h{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rv-ic{width:44px;height:44px;border-radius:14px;background:#f6e9cf;border:1px solid var(--gold2);display:grid;place-items:center;font-size:1.4rem}
+.rv-h b{display:block;line-height:1.2}.rv-h small{color:var(--soft);font-size:.78rem}
+.two{display:grid;grid-template-columns:1fr 1.5fr;gap:10px}
+.two .big-btn{margin-top:14px;padding:16px 10px;font-size:1rem}
+.done-ic{width:60px;height:60px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin:4px auto 10px}.done-ic .i{width:30px;height:30px;stroke-width:3}
+
 nav{position:fixed;left:0;right:0;bottom:0;display:none;justify-content:space-around;align-items:flex-end;background:var(--paper);border-radius:28px 28px 0 0;box-shadow:0 -6px 24px #a8823f26;padding:10px 6px calc(10px + env(safe-area-inset-bottom));z-index:5}
 nav a{flex:1;text-align:center;text-decoration:none;color:var(--soft);font-size:.72rem;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav a span{font-size:1.5rem;line-height:1.3}nav a.on{color:var(--gold);font-weight:600}
 nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;border:4px solid var(--paper);display:grid;place-items:center;margin-top:-34px;font-size:1.7rem;box-shadow:0 6px 16px #0004}
+
+/* lightbox, delete sheet, toast */
 #lb{position:fixed;inset:0;background:#000e;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;padding:20px}
 #lb.on{display:flex}#lb img,#lb video{max-width:100%;max-height:78dvh;border-radius:14px}
-#lb .row{display:flex;gap:10px}
+#lb .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pill{border:0;border-radius:24px;background:#fffaf2e6;color:var(--ink);padding:10px 16px;font:600 .85rem Poppins;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.pill.del{color:var(--err)}
+.note-full{max-width:420px;max-height:76dvh;overflow:auto;background:var(--paper);border-radius:24px;padding:22px 24px;color:var(--ink)}
+.note-full .q{display:block;font:700 3.6rem/.7 'Playfair Display',serif;color:var(--gold2);height:30px}
+.note-full p{margin:10px 0 14px;font:italic 400 1.2rem/1.5 'Playfair Display',serif;white-space:pre-wrap;overflow-wrap:anywhere}
+.note-full small{color:var(--soft);font-size:.85rem}
+#sheet{position:fixed;inset:0;z-index:30;background:#0007;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:480px;background:var(--paper);border-radius:28px 28px 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+.sheet h4{margin:0 0 4px;font:700 1.25rem 'Playfair Display',serif}.sheet p{margin:0;color:var(--soft);font-size:.9rem}
+.sheet .two{grid-template-columns:1fr 1fr}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom));background:#1d1710;color:#fff;padding:12px 18px;border-radius:24px;z-index:40;font-size:.9rem;max-width:90vw;text-align:center;box-shadow:0 8px 24px #0005}
 </style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 8 4.5z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+</svg>
 
 <section class="view center" id="v-home">
   <div class="pillbrand" id="brand"><b id="brandName"></b><small id="brandTag"></small></div>
@@ -108,6 +194,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <h3>Guest Stories</h3>
   <div class="stories" id="stories"></div>
   <div class="tabs" id="tabs"></div>
+  <p class="notice" id="privNote" hidden>The couple will open the album later. For now you can see (and delete) what you added from this phone.</p>
   <div class="grid" id="grid"></div>
 </section>
 
@@ -123,18 +210,59 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 
 <section class="view" id="v-voice">
   <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2>Voice<small>LEAVE A SPOKEN WISH</small></h2><span style="width:46px"></span></div>
-  <label class="f">Your name (optional)</label><input class="nm" maxlength="40">
-  <button class="rec" id="rec" aria-label="Record">🎙️</button>
-  <div class="timer" id="timer">0:00</div>
-  <p class="hint" id="recHint">Tap to start recording (up to 3 minutes)</p>
-  <audio id="prev" controls hidden style="width:100%;margin-top:14px"></audio>
-  <button class="big-btn" id="sendVoice" hidden>Send to the couple</button>
+  <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
+
+  <!-- Each block below is shown only in the states listed in data-s (see vState in the script) -->
+  <div data-s="idle asking countdown recording">
+    <div class="stage">
+      <svg class="rg" viewBox="0 0 164 164" aria-hidden="true"><circle class="trk" cx="82" cy="82" r="77"/><circle class="fg" id="rfg" cx="82" cy="82" r="77"/></svg>
+      <button class="rec" id="rec" type="button" aria-label="Start recording"></button>
+    </div>
+    <div class="timer"><span id="tNow">0:00</span> <small>/ 3:00</small></div>
+    <p class="hint" id="recHint" aria-live="polite"></p>
+    <button class="linkbtn" id="cancelRec" type="button" data-s="countdown recording" hidden>Cancel</button>
+  </div>
+
+  <div class="panel" data-s="denied" hidden>
+    <h4>We need the microphone</h4>
+    <p>Tap <b>Try again</b> and choose <b>Allow</b>. If no pop-up appears, your browser has it switched off. Turn it on here:</p>
+    <ol>
+      <li data-os="ios"><b>iPhone:</b> tap <b>aA</b> in the address bar → <b>Website Settings</b> → <b>Microphone</b> → <b>Allow</b>.</li>
+      <li data-os="android"><b>Android:</b> tap the icon left of the address bar → <b>Permissions</b> → <b>Microphone</b> → <b>Allow</b>.</li>
+      <li data-os="other">Click the lock icon in the address bar → set <b>Microphone</b> to <b>Allow</b>.</li>
+    </ol>
+    <button class="big-btn" id="retryMic" type="button">Try again</button>
+  </div>
+
+  <div class="panel" data-s="unsupported" hidden>
+    <h4>Recording isn't available here</h4>
+    <p id="vErr"></p>
+    <button class="big-btn alt" id="retryErr" type="button">Try again</button>
+  </div>
+
+  <label class="linkbtn" data-s="idle denied unsupported">Or choose an audio file instead<input type="file" id="voiceFile" accept="audio/*"></label>
+
+  <div class="panel" id="review" data-s="review sending" hidden>
+    <div class="rv-h"><span class="rv-ic">🎙️</span><div><b>Your voice memory</b><small id="revInfo"></small></div></div>
+    <audio id="prev" controls preload="metadata" style="width:100%"></audio>
+    <div class="bar" data-s="sending" hidden><i id="vbar"></i></div>
+    <div class="two"><button class="big-btn alt" id="redo" type="button">Record again</button><button class="big-btn" id="sendVoice" type="button">Send to the couple</button></div>
+  </div>
+
+  <div class="panel center" data-s="done" hidden>
+    <div class="done-ic"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></div>
+    <h4>Thank you!</h4>
+    <p>Your voice memory is on its way to the couple.<br>Changed your mind? Find it in the album under <b>Mine</b>.</p>
+    <a class="big-btn" href="#album" data-mine style="text-decoration:none">See it in the album</a>
+    <button class="big-btn alt" id="another" type="button">Record another</button>
+  </div>
+
   <div id="vStatus" aria-live="polite"></div>
 </section>
 
 <section class="view" id="v-note">
   <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2>Note<small>WRITE A WISH</small></h2><span style="width:46px"></span></div>
-  <label class="f">Your name (optional)</label><input class="nm" maxlength="40">
+  <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
   <label class="f">Your message</label><textarea id="text" maxlength="600" placeholder="Wishing you both a lifetime of love…"></textarea>
   <button class="big-btn" id="sendNote">Send note</button>
   <div id="nStatus" aria-live="polite"></div>
@@ -145,19 +273,31 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <a href="#capture" class="cam"><span>📸</span>Capture</a>
   <a href="#voice"><span>🎙️</span>Voice</a><a href="#note"><span>✍️</span>Note</a>
 </nav>
-<div id="lb"><div id="lbBody"></div><div class="row"><a class="pill" id="lbDl" href="#" download>⬇ Save</a><button class="pill" id="lbX">Close</button></div></div>
+<div id="lb"><div id="lbBody"></div><div class="row">
+  <a class="pill" id="lbDl" href="#" download><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Save</a>
+  <button class="pill del" id="lbDel" type="button" hidden><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</button>
+  <button class="pill" id="lbX" type="button">Close</button></div></div>
+<div id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shT"><div class="sheet">
+  <h4 id="shT">Delete this?</h4><p id="shP"></p>
+  <div class="two"><button class="big-btn alt" id="shNo" type="button">Keep it</button><button class="big-btn danger" id="shYes" type="button">Delete</button></div></div></div>
+<div id="toast" role="status" hidden></div>
 
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let cfg={stories:[]},items=[],ftype='all',fcat='',capCat='';
-const liked=new Set(JSON.parse(localStorage.getItem('liked')||'[]'));
-const me=()=>(localStorage.getItem('guestName')||'').trim();
+const ic=(n,c='')=>`<svg class="i ${c}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+let cfg={stories:[],maxMb:100},items=[],ftype='all',fcat='',capCat='',priv=false,lastSig='',cur=null,pendingDel=null;
+let liked;try{liked=new Set(JSON.parse(ls.get('liked')||'[]'))}catch{liked=new Set()}
+const me=()=>(ls.get('guestName')||'').trim();
 const emo=s=>s.split(' ')[0], lbl=s=>s.split(' ').slice(1).join(' ')||s;
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 
-$$('.nm').forEach(i=>{i.value=localStorage.getItem('guestName')||'';i.oninput=()=>{localStorage.setItem('guestName',i.value);$$('.nm').forEach(o=>o.value=i.value)}});
+$$('.nm').forEach(i=>{i.value=ls.get('guestName')||'';i.oninput=()=>{ls.set('guestName',i.value);$$('.nm').forEach(o=>o.value=i.value)}});
 
-fetch('/api/config').then(r=>r.json()).then(c=>{
+// The config request also hands this phone its "device signature" cookie, so uploads wait for it.
+const ready=fetch('/api/config').then(r=>r.json()).then(c=>{
   cfg=c;document.title=c.title;
   $('#names').textContent=c.title;
   if(c.greeting)$('#greeting').textContent=c.greeting;
@@ -167,8 +307,8 @@ fetch('/api/config').then(r=>r.json()).then(c=>{
   $$('.t-title').forEach(e=>e.firstChild.textContent=c.brand||c.title);
   $('#stories').innerHTML=c.stories.map(s=>`<button class="story" data-cat="${esc(s)}"><div class="ring">${esc(emo(s))}<i data-add="${esc(s)}">+</i></div><em>${esc(lbl(s))}</em></button>`).join('');
   $('#capChips').innerHTML=['Anywhere',...c.stories].map((s,i)=>`<button class="chip ${i?'':'on'}" data-cap="${i?esc(s):''}">${esc(s)}</button>`).join('');
-  $('#tabs').innerHTML=[['all','All'],['photo','Photos'],['voice','Voice'],['video','Videos'],['note','Notes']].map(([k,n],i)=>`<button class="chip ${i?'':'on'}" data-type="${k}">${n}</button>`).join('');
-});
+  drawTabs();
+}).catch(()=>{});
 
 function route(){
   const v=location.hash.slice(1)||'home';
@@ -176,61 +316,123 @@ function route(){
   $('nav').style.display=v==='home'?'none':'flex';
   $$('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));
   if(v==='album')loadFeed();
+  v==='voice'?voiceEnter():voiceLeave();
   scrollTo(0,0);
 }
-addEventListener('hashchange',route);route();
+addEventListener('hashchange',route);
 
 // ----- album -----
+const sigOf=a=>JSON.stringify(a.map(i=>[i.id,i.likes,!!i.mine]));
 async function loadFeed(){
-  try{const r=await fetch('/api/feed');if(!r.ok)throw 0;items=await r.json();drawFeed()}
-  catch{$('#grid').innerHTML='<p class="empty">The album isn\'t available right now.</p>'}
+  try{
+    let r=await fetch('/api/feed');
+    priv=r.status===403;                       // album closed to guests: still show their own uploads
+    if(priv)r=await fetch('/api/mine');
+    if(!r.ok)throw 0;
+    items=await r.json();
+    fixFilter();$('#privNote').hidden=!priv;drawTabs();
+    const s=sigOf(items);if(s!==lastSig||!$('#grid').children.length){lastSig=s;drawFeed()}   // skip identical refreshes: keeps scroll, audio and images steady
+  }catch{if(!items.length)$('#grid').innerHTML='<p class="empty">The album isn\'t available right now.</p>'}
 }
-const verb={photo:'Captured by',video:'Captured by',voice:'Voice from',note:'Note from'};
+function fixFilter(){if(ftype==='mine'&&!items.some(i=>i.mine))ftype='all'}
+function drawTabs(){
+  const n=items.filter(i=>i.mine).length;
+  const t=[['all','All'],...(n?[['mine','Mine · '+n]]:[]),['photo','Photos'],['voice','Voice'],['video','Videos'],['note','Notes']];
+  $('#tabs').innerHTML=t.map(([k,l])=>`<button class="chip ${k===ftype?'on':''}" data-type="${k}">${l}</button>`).join('');
+}
+const KIND={photo:['📷','Photo'],video:['🎬','Video'],voice:['🎙️','Voice message'],note:['✍️','Note']};
 function card(i){
   const t=new Date(i.time).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
-  const dark=i.type==='photo'||i.type==='video';
-  let m='';
-  if(i.type==='photo')m=`<img loading="lazy" src="/thumb/${i.id}" data-open="${i.id}" alt="Guest photo">`;
-  else if(i.type==='video')m=`<video src="/media/${i.id}#t=0.1" preload="metadata" muted playsinline data-open="${i.id}"></video>`;
-  else if(i.type==='voice')m=`<div class="txt"><div class="big">🎙️</div><audio controls preload="none" src="/media/${i.id}"></audio></div>`;
-  else m=`<div class="txt">“${esc(i.text)}”</div>`;
-  return `<article class="card ${dark?'':'light'}">${m}<div class="cap"><div><b>${verb[i.type]} ${esc(i.name||'Guest')}</b><small>${t}</small></div>
-  <button class="pill ${liked.has(i.id)?'on':''}" data-like="${i.id}" aria-label="Like">${liked.has(i.id)?'♥':'♡'} <span>${i.likes}</span></button>
-  ${i.type==='note'?'':`<a class="pill" href="/media/${i.id}?dl=1" download aria-label="Download">⬇</a>`}</div></article>`;
+  const who=esc(i.name||'A guest'),on=liked.has(i.id),[em,kind]=KIND[i.type]||KIND.photo;
+  const wide=i.type==='note'&&(i.text.length>90||i.text.includes('\n'));
+  let m;
+  if(i.type==='photo')m=`<img loading="lazy" src="/thumb/${i.id}" data-open="${i.id}" alt="Photo by ${who}">`;
+  else if(i.type==='video')m=`<video src="/media/${i.id}#t=0.1" preload="metadata" muted playsinline data-open="${i.id}"></video><span class="pb">${ic('play','fill')}</span>`;
+  else if(i.type==='voice')m=`<div class="vo" data-dur="${i.dur||0}"><button class="vplay" data-play type="button" aria-label="Play voice message from ${who}">${ic('play','fill pl')}${ic('pause','fill pa')}</button><div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vt">${i.dur?fmt(i.dur):'Voice'}</span><div class="pg"><i></i></div><audio preload="none" src="/media/${i.id}"></audio></div>`;
+  else m=`<button class="nt" data-open="${i.id}" type="button" aria-label="Read note from ${who}"><span class="q" aria-hidden="true">“</span><span class="nt-t">${esc(i.text)}</span>${i.text.length>(wide?190:70)?'<span class="more">Read more</span>':''}</button>`;
+  const tools=(i.type==='note'?'':`<a class="tool" href="/media/${i.id}?dl=1" download aria-label="Save to your phone">${ic('download')}</a>`)
+    +(i.mine?`<button class="tool del" data-del="${i.id}" type="button" aria-label="Delete mine">${ic('trash')}</button>`:'');
+  return `<article class="card ${wide?'wide':''}" aria-label="${kind} from ${who}"><div class="media ${i.type==='note'?'note':''}">${m}${tools?`<div class="tools">${tools}</div>`:''}</div>
+  <div class="cap"><b class="who" title="${who}"><span class="ty" aria-hidden="true">${em}</span>${who}</b>
+  <div class="foot"><time>${t}</time><button class="like ${on?'on':''}" data-like="${i.id}" type="button" aria-pressed="${on}" aria-label="Like">${ic('heart')}<span>${i.likes}</span></button></div></div></article>`;
 }
 function drawFeed(){
-  const l=items.filter(i=>(ftype==='all'||i.type===ftype)&&(!fcat||i.cat===fcat));
-  $('#grid').innerHTML=l.length?l.map(card).join(''):'<p class="empty">Nothing here yet. Tap + on a story or Capture to add the first memory.</p>';
+  cur=null;
+  const l=items.filter(i=>(ftype==='all'||(ftype==='mine'?i.mine:i.type===ftype))&&(!fcat||i.cat===fcat));
+  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':'Nothing here yet. Tap + on a story or Capture to add the first memory.'}</p>`;
 }
+function paintLike(id){
+  const it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
+  $$(`[data-like="${id}"]`).forEach(b=>{b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.querySelector('span').textContent=it.likes;
+    if(on){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}});
+}
+// voice tiles in the album: one player at a time
+document.addEventListener('play',e=>{if(!e.target.matches('.vo audio'))return;if(cur&&cur!==e.target)cur.pause();cur=e.target;e.target.closest('.vo').classList.add('playing')},true);
+['pause','ended'].forEach(ev=>document.addEventListener(ev,e=>{if(!e.target.matches('.vo audio'))return;const v=e.target.closest('.vo');v.classList.remove('playing');if(cur===e.target)cur=null;
+  if(ev==='ended'){v.querySelector('.pg i').style.width='0';v.querySelector('.vt').textContent=+v.dataset.dur?fmt(+v.dataset.dur):'Voice'}},true));
+document.addEventListener('timeupdate',e=>{if(!e.target.matches('.vo audio'))return;const a=e.target,v=a.closest('.vo'),d=isFinite(a.duration)?a.duration:+v.dataset.dur;
+  v.querySelector('.vt').textContent=fmt(a.currentTime)+(d?' / '+fmt(d):'');v.querySelector('.pg i').style.width=d?Math.min(100,a.currentTime/d*100)+'%':'0'},true);
+
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+function closeLb(){$('#lb').classList.remove('on');$('#lbBody').innerHTML=''}
+function closeSheet(){$('#sheet').hidden=true;pendingDel=null}
+function askDelete(id){
+  const it=items.find(x=>x.id===id);if(!it)return;pendingDel=id;
+  $('#shT').textContent=`Delete this ${{photo:'photo',video:'video',voice:'voice message',note:'note'}[it.type]}?`;
+  $('#shP').textContent='It will be removed from the album for everyone. This can\'t be undone.';
+  $('#sheet').hidden=false;$('#shNo').focus();
+}
+async function doDelete(){
+  const id=pendingDel;closeSheet();if(!id)return;
+  try{
+    const r=await fetch('/api/item/'+id,{method:'DELETE'});
+    if(r.ok){items=items.filter(x=>x.id!==id);lastSig=sigOf(items);fixFilter();closeLb();drawTabs();drawFeed();toast('Deleted')}
+    else toast(r.status===403?'Only the phone that added this can delete it':'Couldn\'t delete. Please try again.');
+  }catch{toast('Couldn\'t delete. Check your connection.')}
+}
+
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-like],[data-open],#refresh,#lbX,#lb');
+  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-like],[data-open],[data-del],[data-play],[data-mine],#refresh,#lbX,#lb,#shNo,#shYes,#sheet');
   if(!t)return;
   if(t.dataset.add!==undefined){capCat=t.dataset.add;syncCap();location.hash='#capture';return}
+  if(t.dataset.mine!==undefined){ftype='mine';return}                  // link continues to #album
   if(t.dataset.cat!==undefined){fcat=fcat===t.dataset.cat?'':t.dataset.cat;$$('.story').forEach(s=>s.classList.toggle('on',s.dataset.cat===fcat));drawFeed()}
-  else if(t.dataset.type){ftype=t.dataset.type;$$('#tabs .chip').forEach(c=>c.classList.toggle('on',c===t));drawFeed()}
+  else if(t.dataset.type){ftype=t.dataset.type;drawTabs();drawFeed()}
   else if(t.dataset.cap!==undefined){capCat=t.dataset.cap;syncCap()}
   else if(t.dataset.like){
-    const id=t.dataset.like,it=items.find(x=>x.id===id),on=liked.has(id);
-    on?liked.delete(id):liked.add(id);localStorage.setItem('liked',JSON.stringify([...liked]));
-    it.likes=Math.max(0,it.likes+(on?-1:1));drawFeed();
+    const id=t.dataset.like,it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
+    on?liked.delete(id):liked.add(id);ls.set('liked',JSON.stringify([...liked]));
+    it.likes=Math.max(0,it.likes+(on?-1:1));paintLike(id);
     fetch('/like/'+id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({d:on?-1:1})});
   }
-  else if(t.dataset.open){
-    const it=items.find(x=>x.id===t.dataset.open);
-    $('#lbBody').innerHTML=it.type==='video'?`<video src="/media/${it.id}" controls autoplay playsinline></video>`:`<img src="/media/${it.id}" alt="">`;
-    $('#lbDl').href=`/media/${it.id}?dl=1`;$('#lb').classList.add('on');
+  else if(t.dataset.play!==undefined){
+    const a=t.closest('.vo').querySelector('audio');
+    a.paused?a.play().catch(()=>toast('Couldn\'t play this one')):a.pause();
   }
+  else if(t.dataset.open){
+    const it=items.find(x=>x.id===t.dataset.open);if(!it)return;
+    $('#lbBody').innerHTML=it.type==='note'?`<div class="note-full"><span class="q" aria-hidden="true">“</span><p>${esc(it.text)}</p><small>— ${esc(it.name||'A guest')}</small></div>`
+      :it.type==='video'?`<video src="/media/${it.id}" controls autoplay playsinline></video>`:`<img src="/media/${it.id}" alt="">`;
+    $('#lbDl').hidden=it.type==='note';$('#lbDl').href=`/media/${it.id}?dl=1`;
+    const d=$('#lbDel');d.hidden=!it.mine;d.dataset.del=it.id;
+    $('#lb').classList.add('on');
+  }
+  else if(t.dataset.del)askDelete(t.dataset.del);
+  else if(t.id==='shYes')doDelete();
+  else if(t.id==='shNo'||(t.id==='sheet'&&e.target===t))closeSheet();
   else if(t.id==='refresh')loadFeed();
-  else if(t.id==='lbX'||(t.id==='lb'&&e.target===t)){$('#lb').classList.remove('on');$('#lbBody').innerHTML=''}
+  else if(t.id==='lbX'||(t.id==='lb'&&e.target===t))closeLb();
 });
-setInterval(()=>{if(location.hash==='#album'&&!$('#lb').classList.contains('on')&&!document.querySelector('audio:not([paused])'))loadFeed()},30000);
+addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#sheet').hidden)closeSheet();else closeLb()});
+setInterval(()=>{if(location.hash==='#album'&&document.visibilityState==='visible'&&!$('#lb').classList.contains('on')&&$('#sheet').hidden&&!(cur&&!cur.paused))loadFeed()},30000);
 const syncCap=()=>$$('#capChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.cap===capCat));
 
 // ----- upload -----
-function send(file,cat,onP){
+async function send(file,cat,onP,extra){
+  await ready;
   return new Promise(res=>{
     const x=new XMLHttpRequest();
-    x.open('POST','/upload?name='+encodeURIComponent(me())+'&cat='+encodeURIComponent(cat||''));
+    x.open('POST','/upload?name='+encodeURIComponent(me())+'&cat='+encodeURIComponent(cat||'')+(extra||''));
     x.upload.onprogress=e=>e.lengthComputable&&onP(e.loaded);
     x.onload=()=>{let m='';try{m=JSON.parse(x.responseText).error}catch{}res(x.status===200?'':(m||'Upload failed'))};
     x.onerror=()=>res('Connection lost');
@@ -250,40 +452,144 @@ async function uploadFiles(list){
     if(e){bad++;last=e;tiles[i].className='fail'}else{ok++;loaded[i]=list[i].size;tiles[i].className='done'}paint()}};
   await Promise.all([worker(),worker(),worker()]);
   st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload: ${esc(last)}. Try again.</div>`
-    :`<div class="msg ok">Thank you! ${ok} uploaded. <a href="#album" style="color:var(--gold)">See the album</a></div>`;
+    :`<div class="msg ok">Thank you! ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Open the album → <a href="#album" data-mine>Mine</a> to delete it.</small></div>`;
 }
 ['cam','pick'].forEach(id=>$('#'+id).addEventListener('change',e=>{const l=[...e.target.files];e.target.value='';uploadFiles(l)}));
 
 // ----- voice -----
-let rec,chunks=[],blob,t0,tick,stream;
-const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
-$('#rec').onclick=async()=>{
-  if(rec&&rec.state==='recording'){rec.stop();return}
-  if(!window.MediaRecorder||!navigator.mediaDevices){$('#recHint').textContent='Recording is not supported on this browser.';return}
-  try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch{$('#recHint').textContent='Microphone access was blocked. Allow it in your browser settings.';return}
+// States: idle → (asking → countdown) → recording → review → sending → done, plus denied / unsupported.
+// vState() shows only the blocks whose data-s lists the current state.
+const MAXS=180,CIRC=2*Math.PI*77;
+const V={st:'',run:0,stream:null,rec:null,chunks:[],blob:null,t0:0,tick:0,dur:0,discard:false,url:''};
+let perm='unknown',permWatch=false;
+const OS=/iP(hone|ad|od)/.test(navigator.userAgent)?'ios':/Android/i.test(navigator.userAgent)?'android':'other';
+$$('[data-os]').forEach(e=>e.hidden=e.dataset.os!==OS);
+const hint=t=>$('#recHint').textContent=t;
+const idleHint=()=>hint(perm==='granted'?'Tap the mic and start speaking. Up to 3 minutes.':'Tap the mic. Your browser will ask to use the microphone — choose Allow.');
+function vState(s){
+  V.st=s;
+  $$('#v-voice [data-s]').forEach(e=>e.hidden=!e.dataset.s.split(' ').includes(s));
+  const r=$('#rec');r.classList.toggle('live',s==='recording');
+  r.innerHTML=s==='recording'?ic('stop','fill'):ic('mic');
+  r.setAttribute('aria-label',{recording:'Stop recording',asking:'Cancel',countdown:'Cancel'}[s]||'Start recording');
+  if(s!=='recording')$('#rfg').style.strokeDashoffset=CIRC,$('#rfg').style.strokeDasharray=CIRC;
+  if(s==='idle')$('#tNow').textContent='0:00';
+  if(s==='asking')hint('Waiting for permission… choose Allow on the pop-up.');
+  if(s==='countdown')hint('Get ready…');
+  if(s==='recording')hint('Recording… tap ■ when you\'re done.');
+}
+async function checkPerm(){
+  try{
+    const p=await navigator.permissions.query({name:'microphone'});perm=p.state;
+    if(!permWatch){permWatch=true;p.onchange=()=>{perm=p.state;       // the guest fixed it in settings and came back
+      if(p.state==='denied'&&V.st==='idle')vState('denied');
+      else if(p.state!=='denied'&&V.st==='denied'){vState('idle');idleHint()}
+      else if(V.st==='idle')idleHint()}}
+  }catch{}
+}
+async function voiceEnter(){
+  if(['review','sending','done'].includes(V.st))return;
+  if(!window.MediaRecorder||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    $('#vErr').textContent=window.isSecureContext===false?'Voice recording needs a secure (https) page.':'This browser can\'t record audio here. If you opened the link inside another app (Instagram, WhatsApp…), open it in Safari or Chrome instead. You can also choose an audio file below.';
+    return vState('unsupported');
+  }
+  vState('idle');idleHint();
+  await checkPerm();
+  if(V.st==='idle'){if(perm==='denied')vState('denied');else idleHint()}
+}
+function voiceLeave(){
+  const p=$('#prev');if(p)p.pause();
+  if(['asking','countdown','recording'].includes(V.st))cancelRecording();
+}
+const stopStream=()=>{if(V.stream){V.stream.getTracks().forEach(t=>t.stop());V.stream=null}};
+function cancelRecording(){
+  V.run++;clearInterval(V.tick);
+  if(V.rec&&V.rec.state==='recording'){V.discard=true;try{V.rec.stop()}catch{}}
+  stopStream();vState('idle');idleHint();
+}
+function micError(err){
+  stopStream();const n=err&&err.name;
+  if(n==='NotAllowedError'||n==='SecurityError'){perm='denied';return vState('denied')}
+  $('#vErr').textContent=n==='NotFoundError'?'No microphone was found on this device.':n==='NotReadableError'?'The microphone is busy. Close other apps that may be using it, then try again.':'Recording isn\'t working in this browser. You can choose an audio file instead.';
+  vState('unsupported');
+}
+async function startMic(){
+  if(V.st!=='idle')return;
+  const run=++V.run;vState('asking');
+  const t0=Date.now();let s;
+  try{s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
+  catch(err){if(run===V.run)micError(err);return}
+  if(run!==V.run){s.getTracks().forEach(x=>x.stop());return}          // cancelled / left the page while the pop-up was open
+  V.stream=s;perm='granted';
+  if(Date.now()-t0>500){                                              // a permission pop-up was just answered: give them a 3-2-1 to get ready
+    vState('countdown');
+    for(let n=3;n>0;n--){$('#rec').innerHTML=`<span class="cdn">${n}</span>`;await sleep(900);if(run!==V.run)return}
+  }
+  begin();
+}
+function begin(){
   const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
-  rec=new MediaRecorder(stream,mt?{mimeType:mt}:{});chunks=[];
-  rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
-  rec.onstop=()=>{clearInterval(tick);stream.getTracks().forEach(t=>t.stop());$('#rec').classList.remove('live');$('#rec').textContent='🎙️';
-    blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});$('#prev').src=URL.createObjectURL(blob);$('#prev').hidden=false;$('#sendVoice').hidden=false;$('#recHint').textContent='Listen, then send. Tap the mic to record again.'};
-  rec.start();t0=Date.now();$('#rec').classList.add('live');$('#rec').textContent='⏹';$('#prev').hidden=true;$('#sendVoice').hidden=true;$('#vStatus').textContent='';$('#recHint').textContent='Recording… tap to stop';
-  tick=setInterval(()=>{const s=(Date.now()-t0)/1000;$('#timer').textContent=fmt(s);if(s>=180)rec.stop()},250);
+  let r;try{r=new MediaRecorder(V.stream,mt?{mimeType:mt}:{})}catch{return micError({name:'NotSupportedError'})}
+  V.rec=r;V.chunks=[];V.discard=false;
+  r.ondataavailable=e=>e.data&&e.data.size&&V.chunks.push(e.data);
+  r.onstop=()=>finish(r);
+  r.start();V.t0=Date.now();vState('recording');
+  clearInterval(V.tick);
+  V.tick=setInterval(()=>{const s=(Date.now()-V.t0)/1000;$('#tNow').textContent=fmt(s);$('#rfg').style.strokeDashoffset=CIRC*(1-Math.min(1,s/MAXS));
+    if(s>=MAXS&&r.state==='recording')r.stop()},200);
+}
+function finish(r){
+  clearInterval(V.tick);stopStream();
+  if(V.discard)return;
+  const secs=(Date.now()-V.t0)/1000,b=new Blob(V.chunks,{type:r.mimeType||'audio/webm'});
+  if(secs<1||!b.size){vState('idle');hint('That was too short. Tap the mic and try again.');return}
+  setBlob(b,Math.round(secs),fmt(secs)+' recorded');
+}
+function setBlob(b,dur,info){
+  if(V.url)URL.revokeObjectURL(V.url);
+  V.blob=b;V.dur=dur;V.url=URL.createObjectURL(b);
+  const p=$('#prev');p.src=V.url;p.onloadedmetadata=()=>{if(!V.dur&&isFinite(p.duration))V.dur=Math.round(p.duration)};
+  $('#revInfo').textContent=info;$('#vStatus').innerHTML='';vState('review');
+}
+$('#rec').onclick=()=>{
+  if(V.st==='idle')startMic();
+  else if(V.st==='recording'&&V.rec&&V.rec.state==='recording')V.rec.stop();
+  else if(V.st==='asking'||V.st==='countdown')cancelRecording();
 };
+$('#cancelRec').onclick=cancelRecording;
+$('#retryMic').onclick=()=>{vState('idle');startMic()};
+$('#retryErr').onclick=()=>{vState('idle');idleHint()};
+$('#redo').onclick=()=>{$('#prev').pause();V.blob=null;$('#vStatus').innerHTML='';vState('idle');idleHint()};
+$('#another').onclick=()=>{$('#vStatus').innerHTML='';vState('idle');idleHint()};
+$('#voiceFile').onchange=e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  if(f.size>cfg.maxMb*1048576){$('#vStatus').innerHTML=`<div class="msg err">That file is over ${cfg.maxMb} MB.</div>`;return}
+  setBlob(f,0,f.name);
+};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&V.st==='recording'&&V.rec&&V.rec.state==='recording')V.rec.stop()});   // keep what was recorded if they switch apps
 $('#sendVoice').onclick=async()=>{
-  const b=$('#sendVoice');b.disabled=true;$('#vStatus').innerHTML='<div class="msg">Sending…</div>';
-  const f=new File([blob],'voice.'+(blob.type.includes('mp4')?'m4a':'webm'),{type:blob.type});
-  const e=await send(f,'',()=>{});b.disabled=false;
-  $('#vStatus').innerHTML=e?`<div class="msg err">${esc(e)}. Try again.</div>`:'<div class="msg ok">Thank you! Your voice memory was sent.</div>';
-  if(!e){b.hidden=true;$('#prev').hidden=true;$('#timer').textContent='0:00'}
+  if(!V.blob||V.st!=='review')return;
+  const b=$('#sendVoice'),redo=$('#redo'),label=b.textContent;
+  vState('sending');b.disabled=redo.disabled=true;b.textContent='Sending…';$('#vbar').style.width='0';$('#vStatus').innerHTML='';
+  const ext=/mp4|aac/.test(V.blob.type)?'m4a':/ogg/.test(V.blob.type)?'ogg':/mpeg|mp3/.test(V.blob.type)?'mp3':/wav/.test(V.blob.type)?'wav':'webm';
+  const f=V.blob instanceof File?V.blob:new File([V.blob],'voice.'+ext,{type:V.blob.type||'audio/webm'});
+  const e=await send(f,'',l=>{$('#vbar').style.width=Math.min(100,l/f.size*100)+'%'},'&kind=voice'+(V.dur?'&dur='+V.dur:''));
+  b.disabled=redo.disabled=false;b.textContent=label;
+  if(e){vState('review');$('#vStatus').innerHTML=`<div class="msg err">${esc(e)}. Tap Send to try again.</div>`;return}
+  $('#prev').pause();V.blob=null;if(V.url){URL.revokeObjectURL(V.url);V.url=''}
+  vState('done');
 };
 
 // ----- note -----
 $('#sendNote').onclick=async()=>{
   const text=$('#text').value.trim();if(!text){$('#nStatus').innerHTML='<div class="msg err">Write a few words first.</div>';return}
+  await ready;
   const r=await fetch('/note',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:me(),text})}).catch(()=>null);
-  if(r&&r.ok){$('#text').value='';$('#nStatus').innerHTML='<div class="msg ok">Thank you! Your note was sent.</div>'}
+  if(r&&r.ok){$('#text').value='';$('#nStatus').innerHTML='<div class="msg ok">Thank you! Your note was sent. You can delete it later from the album → <a href="#album" data-mine style="color:var(--gold)">Mine</a>.</div>'}
   else $('#nStatus').innerHTML='<div class="msg err">Could not send. Check your connection and try again.</div>';
 };
+
+route();
 </script>
 </body>
 </html>

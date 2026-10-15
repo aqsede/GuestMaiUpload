@@ -37,8 +37,33 @@ const add = (name, cat, extra) => {
   db[id] = { id, name: clean(name), cat: okCat(cat), time: Date.now(), likes: 0, ...extra };
   save(); return db[id];
 };
-const pub = (e) => ({ id: e.id, type: e.type, name: e.name, cat: e.cat, time: e.time, likes: e.likes, text: e.text, heic: e.file && isHeic(e.file) ? true : undefined });
-const feed = () => Object.values(db).sort((a, b) => b.time - a.time).map(pub);
+
+// ---------- device signature ----------
+// Every browser gets a random secret in an HttpOnly cookie (set by the server, so JS can't read it and
+// Safari doesn't expire it after 7 days). Only a hash of it is stored next to each upload, so the device
+// that uploaded something can delete it, nobody else can, and meta.json never contains a usable secret.
+const ownerHash = (t) => crypto.createHash('sha256').update('wd:' + t).digest('hex').slice(0, 32);
+const device = (q, s, n) => {
+  const m = /(?:^|;\s*)wd=([\w-]{24,64})/.exec(q.headers.cookie || '');
+  let t = m && m[1];
+  if (!t) {
+    t = crypto.randomBytes(24).toString('base64url');
+    s.cookie('wd', t, { httpOnly: true, sameSite: 'lax', secure: q.secure, maxAge: 400 * 864e5, path: '/' });
+  }
+  q.dev = ownerHash(t);
+  n();
+};
+const pub = (e, dev) => ({
+  id: e.id, type: e.type, name: e.name, cat: e.cat, time: e.time, likes: e.likes, text: e.text, dur: e.dur,
+  heic: e.file && isHeic(e.file) ? true : undefined,
+  mine: dev && e.owner === dev ? true : undefined,
+});
+const feed = (dev) => Object.values(db).sort((a, b) => b.time - a.time).map((e) => pub(e, dev));
+const remove = (e) => {
+  if (e.file) fs.rmSync(path.join(U, e.file), { force: true });
+  fs.readdirSync(C).filter((f) => f.startsWith(e.id + '_')).forEach((f) => fs.rmSync(path.join(C, f), { force: true }));
+  delete db[e.id]; save();
+};
 
 // JPEG rendition (HEIC -> JPEG, or resized thumbnail). Cached on disk.
 const pending = new Map();
@@ -56,6 +81,7 @@ function jpeg(id, size) {
     let s = sharp(input).rotate();
     if (size) s = s.resize({ width: size, withoutEnlargement: true });
     await s.jpeg({ quality: 82 }).toFile(out);
+    if (!db[id]) fs.rmSync(out, { force: true }); // deleted while we were rendering it
     return out;
   })().finally(() => pending.delete(out));
   pending.set(out, p);
@@ -81,24 +107,27 @@ app.set('trust proxy', 1);
 app.use(express.json({ limit: '20kb' }));
 const gate = (q, s, n) => (ALBUM_PUBLIC ? n() : s.status(403).json({ error: 'Album is private' }));
 
-app.get('/api/config', (q, s) => res(s, { ...cfg, maxMb: MAX_MB, hasHero: fs.existsSync(HERO) }));
+app.get('/api/config', device, (q, s) => res(s, { ...cfg, maxMb: MAX_MB, hasHero: fs.existsSync(HERO) }));
 const res = (s, o) => s.json(o);
 
-app.post('/upload', (q, s) => upload.single('file')(q, s, (err) => {
+app.post('/upload', device, (q, s) => upload.single('file')(q, s, (err) => {
   if (err) return s.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? `File is over ${MAX_MB} MB` : err.message });
   if (!q.file) return s.status(415).json({ error: 'Unsupported file type' });
   const f = q.file, id = path.parse(f.filename).name;
-  const type = f.mimetype.startsWith('audio/') ? 'voice' : f.mimetype.startsWith('video/') ? 'video' : 'photo';
-  add(q.query.name, q.query.cat, { id, file: f.filename, type });
+  // The voice screen sends kind=voice: audio-only .webm/.mp4 files are often labelled video/* by browsers.
+  const asVoice = f.mimetype.startsWith('audio/') || (q.query.kind === 'voice' && /^video\/(webm|ogg|mp4|3gpp)/.test(f.mimetype));
+  const type = asVoice ? 'voice' : f.mimetype.startsWith('video/') ? 'video' : 'photo';
+  const dur = type === 'voice' ? Math.min(600, Math.max(0, Math.round(+q.query.dur) || 0)) || undefined : undefined; // seconds, from the recorder
+  add(q.query.name, q.query.cat, { id, file: f.filename, type, owner: q.dev, dur });
   if (type === 'photo') setImmediate(() => jpeg(id, 640).catch(() => {}));
-  s.json({ ok: true });
+  s.json({ ok: true, id });
 }));
 
-app.post('/note', (q, s) => {
+app.post('/note', device, (q, s) => {
   const text = String(q.body.text || '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, 600);
   if (!text) return s.status(400).json({ error: 'Write something first' });
-  add(q.body.name, '', { type: 'note', text });
-  s.json({ ok: true });
+  const e = add(q.body.name, '', { type: 'note', text, owner: q.dev });
+  s.json({ ok: true, id: e.id });
 });
 
 const thumbH = async (q, s) => {
@@ -115,7 +144,17 @@ const mediaH = async (q, s) => {
     s.sendFile(p, { maxAge: '1d' });
   } catch { s.status(500).end(); }
 };
-app.get('/api/feed', gate, (q, s) => s.json(feed()));
+app.get('/api/feed', device, gate, (q, s) => s.set('Cache-Control', 'no-store').json(feed(q.dev)));
+// Always available (even when ALBUM_PUBLIC=false): a guest's own uploads.
+app.get('/api/mine', device, (q, s) => s.set('Cache-Control', 'no-store').json(feed(q.dev).filter((i) => i.mine)));
+// A guest can remove what their own device uploaded.
+app.delete('/api/item/:id', device, (q, s) => {
+  const e = db[q.params.id];
+  if (!e) return s.json({ ok: true });
+  if (!e.owner || e.owner !== q.dev) return s.status(403).json({ error: 'You can only delete what this device uploaded' });
+  remove(e);
+  s.json({ ok: true });
+});
 app.get('/thumb/:id', gate, thumbH);
 app.get('/media/:id', gate, mediaH);
 app.post('/like/:id', gate, (q, s) => {
@@ -145,11 +184,7 @@ app.get('/admin/original/:id', (q, s) => {
 });
 app.delete('/admin/item/:id', (q, s) => {
   const e = db[q.params.id];
-  if (e) {
-    if (e.file) fs.rmSync(path.join(U, e.file), { force: true });
-    fs.readdirSync(C).filter((f) => f.startsWith(e.id + '_')).forEach((f) => fs.rmSync(path.join(C, f), { force: true }));
-    delete db[e.id]; save();
-  }
+  if (e) remove(e);
   s.json({ ok: true });
 });
 app.post('/admin/hero', mem.single('hero'), async (q, s) => {
