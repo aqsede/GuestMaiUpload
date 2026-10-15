@@ -5,74 +5,91 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin</title>
 <style>
-:root{--bg:#f4f6f3;--ink:#1d2a22;--soft:#5b6b60;--line:#cfd8cd;--btn:#2d4a39}
-@media (prefers-color-scheme:dark){:root{--bg:#141b16;--ink:#e6eee7;--soft:#9aaa9f;--line:#33423a;--btn:#8fc3a1}}
+:root{--bg:#fbf5ea;--card:#fffaf2;--ink:#1e1810;--soft:#7d6d55;--line:#ead9b9;--gold:#a8823f}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif;padding:20px}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto 20px}
-h1{margin:0;font:italic 400 1.8rem Georgia,serif}
-button,a.btn{font:inherit;padding:9px 16px;border-radius:8px;border:1px solid var(--btn);background:var(--btn);color:var(--bg);cursor:pointer;text-decoration:none}
-button.ghost{background:none;color:var(--ink);border-color:var(--line)}
-section{max-width:1100px;margin:0 auto 24px}
-.qr{display:flex;gap:20px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:16px}
-.qr svg{width:160px;height:160px;background:#fff;border-radius:6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.grid div{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--line)}
-.grid img,.grid video{width:100%;height:100%;object-fit:cover;display:block}
-.grid .x{position:absolute;top:4px;right:4px;padding:2px 8px;background:#000a;border-color:transparent;color:#fff}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif;padding:20px}
+.w{max-width:1100px;margin:0 auto 22px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+h1{margin:0;font:italic 400 1.9rem Georgia,serif;color:var(--gold)}
+button,.btn{font:inherit;padding:9px 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.box{display:flex;gap:22px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:16px}
+.box svg{width:150px;height:150px;background:#fff;border-radius:8px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{background:var(--card);color:var(--ink);border-color:var(--line)}.tabs .on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.it{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--line);border:1px solid var(--line)}
+.it img,.it video{width:100%;height:100%;object-fit:cover;display:block}
+.it .t{padding:10px;font:italic .9rem Georgia,serif;overflow:auto;height:100%;background:var(--card)}
+.it .t audio{width:100%;margin-top:8px}
+.bar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:4px;padding:6px;background:linear-gradient(transparent,#000b);color:#fff;font-size:.72rem;align-items:center}
+.bar span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bar a,.bar button{padding:3px 8px;border-radius:8px;border:0;background:#fffe;color:#000;font-size:.8rem;text-decoration:none}
+.badge{position:absolute;top:6px;left:6px;background:#000a;color:#fff;border-radius:8px;padding:1px 7px;font-size:.68rem}
 #card{display:none}
 @media print{
-  body *{visibility:hidden}
-  #card,#card *{visibility:visible}
+  body *{visibility:hidden}#card,#card *{visibility:visible}
   #card{display:block;position:absolute;inset:0;text-align:center;padding:40px;color:#000;background:#fff}
   #card svg{width:70vw;max-width:420px;height:auto}
-  #card h2{font:italic 400 2.4rem Georgia,serif;margin:0 0 6px}
-  #card p{font:1.3rem Georgia,serif;margin:0 0 16px}
+  #card h2{font:italic 400 2.6rem Georgia,serif;margin:0 0 6px}#card p{font:1.3rem Georgia,serif;margin:0 0 16px}
 }
 </style>
 </head>
 <body>
-<header>
-  <h1 id="title">Admin</h1>
-  <div><a class="btn" href="/admin/zip">Download all (.zip)</a></div>
-</header>
-<section class="qr">
+<header class="w"><h1 id="title">Admin</h1><a class="btn" href="/admin/zip">Download all (.zip)</a></header>
+<section class="w box">
   <div id="qr"></div>
   <div>
     <strong>Table QR code</strong>
     <div id="url" style="color:var(--soft);word-break:break-all"></div>
     <p style="margin:10px 0"><button onclick="window.print()">Print table card</button></p>
   </div>
+  <div style="margin-left:auto">
+    <strong>Cover photo</strong>
+    <div style="color:var(--soft);font-size:.85rem">Shown on the guest home page (JPG, PNG or HEIC)</div>
+    <p style="margin:10px 0"><input type="file" id="hero" accept="image/*,.heic,.heif"></p>
+    <div id="heroMsg" style="font-size:.85rem"></div>
+  </div>
 </section>
-<section>
+<section class="w">
+  <div class="tabs" id="tabs"></div>
   <p id="count" style="color:var(--soft)"></p>
   <div class="grid" id="grid"></div>
 </section>
 <div id="card"><h2 id="ct"></h2><p>Scan to share your photos with us</p><div id="cq"></div></div>
 <script>
-async function load() {
-  const d = await (await fetch('/admin/api/list')).json();
-  document.getElementById('title').textContent = d.title;
-  document.getElementById('ct').textContent = d.title;
-  document.getElementById('count').textContent = d.files.length + ' uploads';
-  const g = document.getElementById('grid'); g.innerHTML = '';
-  for (const f of d.files) {
-    const u = '/admin/file/' + encodeURIComponent(f.name);
-    const el = document.createElement('div');
-    el.innerHTML = (f.video ? `<video src="${u}" preload="metadata" controls></video>` : `<a href="${u}" target="_blank"><img src="${u}" loading="lazy" alt=""></a>`)
-      + `<button class="x" title="Delete">✕</button>`;
-    el.querySelector('.x').onclick = async () => {
-      if (confirm('Delete this file permanently?')) { await fetch(u, { method: 'DELETE' }); load(); }
-    };
-    g.append(el);
-  }
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let all=[],f='all';
+const tabs=[['all','All'],['photo','Photos'],['video','Videos'],['voice','Voice'],['note','Notes']];
+function draw(){
+  document.getElementById('tabs').innerHTML=tabs.map(([k,n])=>`<button class="${k===f?'on':''}" data-f="${k}">${n} (${k==='all'?all.length:all.filter(i=>i.type===k).length})</button>`).join('');
+  const l=all.filter(i=>f==='all'||i.type===f);
+  document.getElementById('count').textContent=l.length+' items';
+  document.getElementById('grid').innerHTML=l.map(i=>{
+    const who=esc(i.name||'Guest');
+    let m;
+    if(i.type==='photo')m=`<a href="/admin/media/${i.id}" target="_blank"><img loading="lazy" src="/admin/thumb/${i.id}" alt=""></a>`;
+    else if(i.type==='video')m=`<video src="/admin/media/${i.id}#t=0.1" preload="metadata" controls playsinline></video>`;
+    else if(i.type==='voice')m=`<div class="t">🎙️ ${who}<audio controls preload="none" src="/admin/media/${i.id}"></audio></div>`;
+    else m=`<div class="t">“${esc(i.text)}”</div>`;
+    const dl=i.type==='note'?'':`<a href="/admin/original/${i.id}" title="Download original">⬇</a>`;
+    return `<div class="it">${m}${i.heic?'<span class="badge">HEIC</span>':''}<div class="bar"><span>${who}${i.cat?' · '+esc(i.cat):''} · ♥${i.likes}</span>${dl}<button data-del="${i.id}" title="Delete">✕</button></div></div>`;
+  }).join('');
 }
-(async () => {
-  const q = await (await fetch('/admin/api/qr')).json();
-  document.getElementById('qr').innerHTML = q.svg;
-  document.getElementById('cq').innerHTML = q.svg;
-  document.getElementById('url').textContent = q.url;
-  load(); setInterval(load, 30000);
+async function load(){const d=await (await fetch('/admin/api/list')).json();all=d.items;document.getElementById('title').textContent=d.title;document.getElementById('ct').textContent=d.title;draw()}
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-f],[data-del]');if(!t)return;
+  if(t.dataset.f){f=t.dataset.f;draw()}
+  else if(confirm('Delete this permanently?')){await fetch('/admin/item/'+t.dataset.del,{method:'DELETE'});load()}
+});
+document.getElementById('hero').onchange=async e=>{
+  const fd=new FormData();fd.append('hero',e.target.files[0]);const m=document.getElementById('heroMsg');m.textContent='Uploading…';
+  const r=await fetch('/admin/hero',{method:'POST',body:fd});m.textContent=r.ok?'Saved. Refresh the guest page to see it.':'Could not read that image.';
+};
+(async()=>{
+  const q=await (await fetch('/admin/api/qr')).json();
+  document.getElementById('qr').innerHTML=q.svg;document.getElementById('cq').innerHTML=q.svg;document.getElementById('url').textContent=q.url;
+  load();setInterval(load,30000);
 })();
 </script>
 </body>

@@ -1,30 +1,24 @@
-# Wedding Photo Share
+# Wedding Memories
 
-Guests scan a QR code on their table, tap one button, and their photos/videos upload straight to your server. No app, no login.
+QR on each table -> guests open one page to capture photos/videos, leave a voice memory, write a note, and browse/like/download the shared album. You manage everything at `/admin`.
 
 ## Run
 ```bash
-cp .env.example .env     # edit PUBLIC_URL, title, ADMIN_PASSWORD
+cp .env.example .env     # edit PUBLIC_URL, names, ADMIN_PASSWORD
 docker compose up -d --build
 ```
-Or without compose:
-```bash
-docker build -t wedding-photos .
-docker run -d --name wedding-photos --env-file .env -p 3000:3000 -v photos:/data --restart unless-stopped wedding-photos
-```
+(Upgrading from v1? Keep the same `photos` volume; old uploads are adopted automatically.)
 
-## URLs
-- `/` guest upload page (what the QR opens)
-- `/admin` login with ADMIN_USER / ADMIN_PASSWORD: gallery, delete, **Download all (.zip)**, **Print table card** (QR + title)
+## Pages
+- `/` guest app: Home, Album (stories, filters, likes, downloads), Capture, Voice, Note
+- `/admin` (basic auth): gallery of everything incl. **HEIC** (shown as JPEG, original downloadable), delete, **Download all (.zip)**, print table QR card, upload cover photo
 
-## Reverse proxy (important)
-Serve over **HTTPS** (phones need it for a good experience) and raise upload limits:
-- nginx: `client_max_body_size 200m;` and `proxy_request_buffering off;`
-- Caddy: works out of the box. 
-- Cloudflare proxy (free plan) caps a single request at 100 MB, so keep MAX_MB <= 100.
+## HEIC
+iPhone HEIC files are stored untouched. Browsers that can't show HEIC get an automatically generated JPEG (cached in `/data/cache`) for thumbnails, preview and guest downloads. Admin "⬇" and the zip always give the original file.
 
-## Notes
-- Files live in the `photos` Docker volume (`/data/uploads`). Back it up: `docker run --rm -v photos:/d -v $PWD:/b alpine tar czf /b/photos.tgz -C /d .`
-- Only image/* and video/* are accepted. Each file uploads as its own request with one auto-retry, 3 in parallel.
-- Anyone with the QR link can upload, so test the QR before printing, and print the card from `/admin`.
-- Videos from phones can be large; raise MAX_MB if you expect long clips.
+## Reverse proxy
+Use HTTPS (required for camera/mic). Raise limits: nginx `client_max_body_size 200m; proxy_request_buffering off;`. Cloudflare free plan caps requests at 100 MB.
+
+## Data
+Everything is in the `photos` volume: `/data/uploads` (files), `/data/meta.json` (names, likes, notes), `/data/cache`, `/data/hero.jpg`.
+Back up: `docker run --rm -v photos:/d -v $PWD:/b alpine tar czf /b/photos.tgz -C /d .`
