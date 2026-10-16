@@ -112,10 +112,11 @@ textarea{min-height:150px;resize:vertical}
 .hint{font-size:.82rem;color:var(--soft);text-align:center;margin:10px 0 0}
 .bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
 .ok{color:var(--ok)}.err{color:var(--err)}.msg{font-size:.95rem;margin-top:18px}
-.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
-.thumbs div{aspect-ratio:1;border-radius:12px;background:var(--line) center/cover;position:relative;overflow:hidden}
-.thumbs .done::after,.thumbs .fail::after{position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;color:#fff;font:700 13px/20px Poppins;text-align:center}
-.thumbs .done::after{content:"✓";background:var(--ok)}.thumbs .fail::after{content:"!";background:var(--err)}
+.upthumbs{display:flex;gap:8px;justify-content:center;align-items:center;margin:2px 44px 12px}
+.upthumbs div{flex:none;width:52px;height:52px;border-radius:14px;background:var(--line) center/cover;position:relative;overflow:hidden;display:grid;place-items:center;font-size:1.5rem}
+.upthumbs .more{font:600 .85rem Poppins;color:var(--soft)}
+.upthumbs .done::after,.upthumbs .fail::after{position:absolute;right:3px;bottom:3px;width:20px;height:20px;border-radius:50%;color:#fff;font:700 13px/20px Poppins;text-align:center}
+.upthumbs .done::after{content:"✓";background:var(--ok)}.upthumbs .fail::after{content:"!";background:var(--err)}
 .msg a{color:var(--gold)}
 
 /* ---------- voice ---------- */
@@ -157,12 +158,25 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 .note-full .q{display:block;font:700 3.6rem/.7 'Playfair Display',serif;color:var(--gold2);height:30px}
 .note-full p{margin:10px 0 14px;font:italic 400 1.2rem/1.5 'Playfair Display',serif;white-space:pre-wrap;overflow-wrap:anywhere}
 .note-full small{color:var(--soft);font-size:.85rem}
-#sheet{position:fixed;inset:0;z-index:30;background:#0007;display:flex;align-items:flex-end;justify-content:center}
+#sheet,#up{position:fixed;inset:0;z-index:30;background:#0007;display:flex;align-items:flex-end;justify-content:center}
+#up{z-index:28}
 .sheet{width:100%;max-width:480px;background:var(--paper);border-radius:28px 28px 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease-out}
 @keyframes up{from{transform:translateY(40px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.sheet{animation:none}}
 .sheet h4{margin:0 0 4px;font:700 1.25rem 'Playfair Display',serif}.sheet p{margin:0;color:var(--soft);font-size:.9rem}
 .sheet .two{grid-template-columns:1fr 1fr}
+.sheet.up{position:relative;text-align:center}
+.sheet.up h4{font-size:1.2rem}
+.upx{position:absolute;top:12px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:#f8ecd6;color:var(--ink);font-size:1.05rem;cursor:pointer}
+.upq{margin:14px 0 4px;font:700 1.15rem 'Playfair Display',serif}.upq small{display:block;font:400 .78rem Poppins;color:var(--soft);margin-top:2px}
+.moms{display:flex;gap:6px 8px;justify-content:center;flex-wrap:wrap;margin:8px 0 2px}
+.mom{width:78px;background:none;border:0;padding:4px 0;color:var(--ink);cursor:pointer;text-align:center;font:600 .6rem/1.25 Poppins;letter-spacing:.06em;text-transform:uppercase}
+.mom .ring{position:relative;width:62px;height:62px;border-radius:50%;background:#1d1710;border:3px solid var(--gold2);display:grid;place-items:center;font-size:1.7rem;margin:0 auto 6px;transition:transform .15s}
+.mom.on .ring{box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--gold);transform:scale(1.07)}
+.mom.on .ring::after{content:"✓";position:absolute;right:-7px;bottom:-5px;width:24px;height:24px;border-radius:50%;background:var(--ok);color:#fff;font:700 .85rem/24px Poppins;text-align:center;border:2px solid var(--paper)}
+.mom em{display:block;font-style:normal;overflow-wrap:anywhere}
+.sheet.up .hint{min-height:1.4em;margin:6px 0 0;color:var(--ok);font-weight:600}
+@media (prefers-reduced-motion:reduce){.mom .ring{transition:none}}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom));background:#1d1710;color:#fff;padding:12px 18px;border-radius:24px;z-index:40;font-size:.9rem;max-width:90vw;text-align:center;box-shadow:0 8px 24px #0005}
 </style>
 </head>
@@ -211,14 +225,6 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <label class="big-btn alt">🖼️ Choose photos &amp; videos<input type="file" id="pick" accept="image/*,video/*,.heic,.heif" multiple></label>
   <p class="hint">Pick as many as you like. Full quality, no sign-up.</p>
   <div id="status" aria-live="polite"></div>
-  <!-- appears as soon as files are picked; uploading never waits for it -->
-  <div class="panel" id="tagCard" hidden>
-    <h4>Which moment is this?</h4>
-    <p>Optional, it helps everyone find it in the album. <span id="tagCount"></span></p>
-    <div class="chips" id="capChips"></div>
-    <p class="hint" id="tagMsg" aria-live="polite" style="text-align:left"></p>
-  </div>
-  <div class="thumbs" id="thumbs"></div>
 </section>
 
 <section class="view" id="v-voice">
@@ -293,6 +299,18 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 <div id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shT"><div class="sheet">
   <h4 id="shT">Delete this?</h4><p id="shP"></p>
   <div class="two"><button class="big-btn alt" id="shNo" type="button">Keep it</button><button class="big-btn danger" id="shYes" type="button">Delete</button></div></div></div>
+<div id="up" hidden role="dialog" aria-modal="true" aria-labelledby="upT"><div class="sheet up">
+  <button class="upx" id="upX" type="button" aria-label="Hide (upload keeps going)">✕</button>
+  <div class="upthumbs" id="upThumbs"></div>
+  <h4 id="upT">Uploading…</h4>
+  <div class="bar"><i id="upBar"></i></div>
+  <p class="upq" id="upQ">Which moment is this?<small>Tap one, or just skip</small></p>
+  <div class="moms" id="capChips"></div>
+  <p class="hint" id="tagMsg" aria-live="polite"></p>
+  <p class="msg err" id="upErr" hidden style="margin:8px 0 0"></p>
+  <button class="big-btn alt" id="upRetry" type="button" hidden>Try the failed ones again</button>
+  <button class="big-btn" id="upDone" type="button" disabled>Uploading…</button>
+</div></div>
 <div id="toast" role="status" hidden></div>
 
 <script>
@@ -319,7 +337,7 @@ const ready=fetch('/api/config').then(r=>r.json()).then(c=>{
   $('#blurb').innerHTML=esc(c.blurb).replace(/\n/g,'<br>');
   $$('.t-title').forEach(e=>e.firstChild.textContent=c.brand||c.title);
   $('#stories').innerHTML='<button class="story on" data-cat=""><div class="ring">✨</div><em>Everything</em></button>'+c.stories.map(s=>`<button class="story" data-cat="${esc(s)}"><div class="ring">${esc(emo(s))}<i data-add="${esc(s)}">+</i></div><em>${esc(lbl(s))}</em></button>`).join('');
-  $('#capChips').innerHTML=['Anywhere',...c.stories].map((s,i)=>`<button class="chip ${i?'':'on'}" data-cap="${i?esc(s):''}">${esc(s)}</button>`).join('');
+  $('#capChips').innerHTML=c.stories.map(s=>`<button class="mom" data-cap="${esc(s)}" type="button"><span class="ring">${esc(emo(s))}</span><em>${esc(lbl(s))}</em></button>`).join('');
   drawTabs();
 }).catch(()=>{});
 
@@ -413,7 +431,7 @@ async function doDelete(){
 }
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],#refresh,#lbX,#lb,#shNo,#shYes,#sheet');
+  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],#refresh,#lbX,#lb,#shNo,#shYes,#sheet,#upX,#upDone,#upRetry');
   if(!t)return;
   if(t.dataset.add!==undefined){capPreset=capCat=t.dataset.add;syncCap();drawPreset();location.hash='#capture';return}
   if(t.dataset.mine!==undefined){ftype='mine';return}                  // link continues to #album
@@ -428,7 +446,7 @@ document.addEventListener('click',async e=>{
     else toast('Couldn\'t change it. Please try again.');
   }
   else if(t.dataset.type){ftype=t.dataset.type;drawTabs();drawFeed()}
-  else if(t.dataset.cap!==undefined){capCat=t.dataset.cap;syncCap();applyCat()}
+  else if(t.dataset.cap!==undefined){capCat=capCat===t.dataset.cap?'':t.dataset.cap;syncCap();applyCat()}   // tap again to un-select
   else if(t.dataset.like){
     const id=t.dataset.like,it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
     on?liked.delete(id):liked.add(id);ls.set('liked',JSON.stringify([...liked]));
@@ -452,16 +470,19 @@ document.addEventListener('click',async e=>{
   else if(t.dataset.del)askDelete(t.dataset.del);
   else if(t.id==='shYes')doDelete();
   else if(t.id==='shNo'||(t.id==='sheet'&&e.target===t))closeSheet();
+  else if(t.id==='upX'||t.id==='upDone')closeUp();
+  else if(t.id==='upRetry'){const f=upFailed;upFailed=[];uploadFiles(f)}
   else if(t.id==='refresh')loadFeed();
   else if(t.id==='lbX'||(t.id==='lb'&&e.target===t))closeLb();
 });
 addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#sheet').hidden)closeSheet();else closeLb()});
 setInterval(()=>{if(location.hash==='#album'&&document.visibilityState==='visible'&&!$('#lb').classList.contains('on')&&$('#sheet').hidden&&!(cur&&!cur.paused))loadFeed()},30000);
-const syncCap=()=>$$('#capChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.cap===capCat));
+const syncCap=()=>$$('#capChips .mom').forEach(c=>{const on=!!capCat&&c.dataset.cap===capCat;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on)});
 
 // ----- upload -----
-// Uploading starts the moment files are picked: no question first. While it runs, an optional
-// "Which moment is this?" card tags the whole batch. Files already uploaded are updated; queued ones just use the new tag.
+// Uploading starts the moment files are picked. A bottom sheet pops up right away (nothing to scroll to) showing
+// ONLY this batch, with one-tap moment buttons that apply to the whole batch. Already-uploaded files are updated;
+// queued ones just use the new tag. Skipping is fine: it stays "Anywhere".
 async function send(file,cat,onP,extra){
   await ready;
   return new Promise(res=>{
@@ -481,35 +502,64 @@ async function tagItem(id,cat){
   }catch{}
   return false;
 }
-async function applyCat(){                       // a moment was tapped on the tag card
+let upTimer=0,upFailed=[];
+const closeUp=()=>{clearTimeout(upTimer);$('#up').hidden=true};
+async function applyCat(){                       // a moment tile was tapped (or untapped)
   const b=batch;if(!b)return;
+  clearTimeout(upTimer);
   b.cat=capCat;                                  // files not uploaded yet will be sent with this tag
   const todo=b.done.filter(d=>d.cat!==capCat);   // files already uploaded get updated
   const ok=(await Promise.all(todo.map(async d=>{const k=await tagItem(d.id,capCat);if(k)d.cat=capCat;return k}))).every(Boolean);
-  $('#tagMsg').textContent=ok?`✓ Saved to ${capCat||'Anywhere'}`:'Couldn\'t update some of them. Tap a moment again to retry.';
+  $('#tagMsg').textContent=ok?(capCat?`✓ Saved to ${capCat}`:'Saved to Anywhere'):'Couldn\'t update some of them. Tap again to retry.';
+  if(ok&&b.finished&&capCat&&batch===b)upTimer=setTimeout(closeUp,1400);   // all done and tagged: get out of the way
 }
 async function uploadFiles(list){
   if(!list.length)return;
-  capCat=capPreset;syncCap();                    // each new batch starts from the "+" moment the guest came from, else Anywhere
-  $('#tagMsg').textContent='';$('#tagCard').hidden=false;
-  $('#tagCount').textContent=list.length>1?`Applies to all ${list.length} you just picked.`:'';
-  const b=batch={cat:capCat,done:[]};
+  const n=list.length;
+  capCat=capPreset;syncCap();                    // each batch starts from the "+" moment the guest came from, else nothing selected
+  const b=batch={cat:capCat,done:[],finished:false};
+  // sheet: reset to show only this batch
+  clearTimeout(upTimer);upFailed=[];
+  $('#upT').textContent=`Uploading 0 of ${n}…`;$('#upBar').style.width='0';$('#upBar').parentNode.hidden=false;
+  $('#upQ').firstChild.textContent=n>1?`Which moment are these ${n}?`:'Which moment is this?';
+  $('#tagMsg').textContent=capCat?`✓ Saved to ${capCat}`:'';
+  $('#upErr').hidden=$('#upRetry').hidden=true;
+  const dn=$('#upDone');dn.disabled=true;dn.textContent='Uploading…';
+  $('#up').hidden=false;
+  const th=$('#upThumbs');th.innerHTML='';
+  const tiles=list.map((f,i)=>{
+    const d=document.createElement('div');
+    if(f.type.startsWith('image/')&&!/hei[cf]/i.test(f.type))d.style.backgroundImage=`url(${URL.createObjectURL(f)})`;
+    else d.textContent=f.type.startsWith('video/')?'🎬':'🖼️';
+    if(i<5)th.appendChild(d);return d});
+  if(n>5){const m=document.createElement('span');m.className='more';m.textContent='+'+(n-5);th.appendChild(m)}
+
   const total=list.reduce((s,f)=>s+f.size,0)||1,loaded=list.map(()=>0);
   let ok=0,bad=0,next=0,last='';
-  const st=$('#status');st.innerHTML='<div class="msg" id="t"></div><div class="bar"><i id="b"></i></div>';
-  const paint=()=>{$('#b').style.width=Math.min(100,loaded.reduce((a,b)=>a+b,0)/total*100)+'%';$('#t').textContent=`Uploading ${ok+bad} of ${list.length}…`};
-  const tiles=list.map(f=>{const d=document.createElement('div');if(f.type.startsWith('image/')&&!/hei[cf]/i.test(f.type))d.style.backgroundImage=`url(${URL.createObjectURL(f)})`;$('#thumbs').prepend(d);return d});
+  const st=$('#status');
+  const paint=()=>{
+    $('#upBar').style.width=Math.min(100,loaded.reduce((a,c)=>a+c,0)/total*100)+'%';
+    $('#upT').textContent=`Uploading ${ok+bad} of ${n}…`;
+    st.innerHTML=`<div class="msg">Uploading ${ok+bad} of ${n}…</div>`;
+  };
   paint();
-  const worker=async()=>{while(next<list.length){const i=next++,p=l=>{loaded[i]=l;paint()},cat=b.cat;
+  const worker=async()=>{while(next<n){const i=next++,p=l=>{loaded[i]=l;paint()},cat=b.cat;
     let r=await send(list[i],cat,p);if(r.err)r=await send(list[i],cat,p);
-    if(r.err){bad++;last=r.err;tiles[i].className='fail'}
+    if(r.err){bad++;last=r.err;upFailed.push(list[i]);tiles[i].className='fail'}
     else{ok++;loaded[i]=list[i].size;tiles[i].className='done';
       const d={id:r.id,cat};b.done.push(d);
-      if(b.cat!==cat&&r.id)tagItem(r.id,b.cat).then(k=>{if(k)d.cat=b.cat})}   // the guest picked a moment while this one was uploading
+      if(b.cat!==cat&&r.id)tagItem(r.id,b.cat).then(k=>{if(k)d.cat=b.cat})}   // a moment was tapped while this one was uploading
     paint()}};
   await Promise.all([worker(),worker(),worker()]);
-  st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload: ${esc(last)}. Try again.</div>`
-    :`<div class="msg ok">Thank you! ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Open the album → <a href="#album" data-mine>Mine</a> to delete it or change its moment.</small></div>`;
+  b.finished=true;
+  st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload.</div>`
+    :`<div class="msg ok">✓ ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Album → <a href="#album" data-mine>Mine</a> lets you delete it or change its moment.</small></div>`;
+  if(batch!==b)return;                           // a newer batch took over the sheet
+  $('#upBar').parentNode.hidden=true;
+  $('#upT').textContent=bad?`${ok} uploaded, ${bad} failed`:`✓ ${ok} uploaded`;
+  dn.disabled=false;dn.textContent='Done';
+  if(bad){$('#upErr').textContent=last+'.';$('#upErr').hidden=$('#upRetry').hidden=false}
+  else if(b.cat)upTimer=setTimeout(()=>{if(batch===b)closeUp()},1600);   // already tagged: close by itself
 }
 ['cam','pick'].forEach(id=>$('#'+id).addEventListener('change',e=>{const l=[...e.target.files];e.target.value='';uploadFiles(l)}));
 

@@ -20,7 +20,7 @@ Each phone/browser gets a random "device signature" (an HttpOnly cookie, set on 
 - With `ALBUM_PUBLIC=false`, guests still see (and can delete) their own uploads via `/api/mine`.
 
 ## Moments (stories) and tagging
-Guests are never asked a question before uploading. Photos/videos upload the moment they are picked; while they upload, an optional **"Which moment is this?"** card tags the whole batch (files already uploaded are updated, queued ones use the new tag). Tapping **+** on a story in the Album pre-selects that moment. A guest can change the moment of one of their own photos/videos later from its full-screen view (Album → Mine). In the Album, **Everything** is the first story tile and a "Showing … · Show all" bar appears whenever a moment is selected.
+Guests are never asked a question before uploading. Photos/videos upload the moment they are picked; a bottom sheet pops up straight away showing only that batch, with one-tap emoji buttons to tag the whole batch (tap again to un-select; files already uploaded are updated, queued ones use the new tag). Skipping keeps "Anywhere"; once everything is uploaded and tagged the sheet closes by itself. Tapping **+** on a story in the Album pre-selects that moment. A guest can change the moment of one of their own photos/videos later from its full-screen view (Album → Mine). In the Album, **Everything** is the first story tile and a "Showing … · Show all" bar appears whenever a moment is selected.
 
 ## Voice memories
 Tap the mic → allow the microphone (a 3-2-1 countdown follows the first permission pop-up) → stop → listen → **Send** or **Record again**. If the mic is blocked or unsupported (e.g. in-app browsers), guests get step-by-step help and can choose an audio file instead.
