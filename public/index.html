@@ -160,7 +160,33 @@ textarea{min-height:150px;resize:vertical}
 nav{position:fixed;left:0;right:0;bottom:0;display:none;justify-content:space-around;align-items:flex-end;background:var(--paper);border-radius:28px 28px 0 0;box-shadow:0 -6px 24px #a8823f26;padding:10px 6px calc(10px + env(safe-area-inset-bottom));z-index:5}
 nav a{flex:1;text-align:center;text-decoration:none;color:var(--soft);font-size:.72rem;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav a span{font-size:1.5rem;line-height:1.3}nav a.on{color:var(--gold);font-weight:600}
-nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;border:4px solid var(--paper);display:grid;place-items:center;margin-top:-34px;font-size:1.7rem;box-shadow:0 6px 16px #0004}
+nav a.cam span{position:relative;width:68px;height:68px;border-radius:50%;background:#1d1710;border:4px solid var(--paper);display:grid;place-items:center;margin-top:-34px;font-size:1.7rem;box-shadow:0 6px 16px #0004}
+/* friendly "add yours" glow: ripples a few times, then rests as a soft halo; gone once this phone has contributed */
+nav a.cam.glow{color:var(--gold);font-weight:600}
+nav a.cam.glow span{box-shadow:0 0 0 3px #d9bd8066,0 0 18px 4px #d9bd8099,0 6px 16px #0004}
+nav a.cam.glow span::before,nav a.cam.glow span::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--gold2);opacity:0;pointer-events:none;animation:ripple 2.6s ease-out 5}
+nav a.cam.glow span::after{animation-delay:1.3s}
+@keyframes ripple{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.invite{display:flex;align-items:center;gap:12px;margin:0 0 4px;padding:9px 14px 9px 9px;border-radius:22px;background:linear-gradient(#2a2118,#15100a);color:#fff;text-decoration:none;box-shadow:0 6px 18px #a8823f33;animation:halo 2.6s ease-out 5}
+.invite[hidden]{display:none}
+.invite .ii{width:42px;height:42px;border-radius:13px;background:#f6e9cf;display:grid;place-items:center;font-size:1.3rem;flex:none}
+.invite b{display:block;font:600 .95rem/1.25 Poppins}.invite small{display:block;color:#d9c9a7;font-size:.75rem;line-height:1.3}
+.invite .go{margin-left:auto;font-size:1.7rem;line-height:1;color:var(--gold2)}
+@keyframes halo{0%{box-shadow:0 0 0 0 #d9bd80aa,0 6px 18px #a8823f33}100%{box-shadow:0 0 0 14px #d9bd8000,0 6px 18px #a8823f33}}
+@media (prefers-reduced-motion:reduce){nav a.cam.glow span::before,nav a.cam.glow span::after,.invite{animation:none}nav a.cam.glow span::before{opacity:.7;transform:scale(1.2)}}
+/* how-to page */
+.how{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.how li{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:10px 14px}
+.hi{width:46px;height:46px;flex:none;border-radius:14px;background:#f6e9cf;border:1px solid var(--gold2);display:grid;place-items:center;font-size:1.4rem}
+.how b{display:block;font:700 1rem/1.2 'Playfair Display',serif}.how li span:not(.hi){font-size:.85rem;color:var(--soft);line-height:1.35}
+.oops{margin-top:20px;background:linear-gradient(#2a2118,#15100a);color:#fff;border-radius:26px;padding:18px 14px 14px;text-align:center}
+.oops h3{margin:0 0 16px;color:#fff;font-size:1.2rem}
+.s3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.s3>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.8rem;line-height:1.3}
+.s3 i{width:36px;height:36px;border-radius:50%;background:var(--gold2);color:#1d1710;display:grid;place-items:center;font:700 1rem Poppins;font-style:normal}
+.s3 .i{width:15px;height:15px;vertical-align:-2px;color:#f19c94}
+.oops .big-btn{background:var(--gold2);color:#1d1710;margin-top:18px;text-decoration:none}
+.oops .hint{color:#d9c9a7}
 
 /* lightbox, delete sheet, toast */
 #lb{position:fixed;inset:0;background:#000e;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;padding:20px}
@@ -225,7 +251,8 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 </section>
 
 <section class="view" id="v-album">
-  <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2 class="t-title">Memories<small>CAPTURE. CHERISH. FOREVER.</small></h2><button class="sq" id="refresh" aria-label="Refresh">⟳</button></div>
+  <div class="top"><a class="sq" href="#help" aria-label="How to" style="font-weight:700;font-family:Playfair Display,serif">?</a><h2 class="t-title">Memories<small>CAPTURE. CHERISH. FOREVER.</small></h2><button class="sq" id="refresh" aria-label="Refresh">⟳</button></div>
+  <a class="invite" id="invite" href="#capture" hidden><span class="ii" aria-hidden="true">📸</span><span><b>Add your photos</b><small>Share your view of the day</small></span><span class="go" aria-hidden="true">›</span></a>
   <h3>Guest Stories</h3>
   <div class="stories" id="stories"></div>
   <div class="tabs" id="tabs"></div>
@@ -237,8 +264,29 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <div class="grid" id="grid"></div>
 </section>
 
+<section class="view" id="v-help">
+  <div class="top"><a class="sq" href="#album" aria-label="Back">←</a><h2>How to<small>30 SECONDS</small></h2><span style="width:46px"></span></div>
+  <ul class="how">
+    <li><span class="hi">📸</span><div><b>Add</b><span>Tap the glowing camera. Uploads start on their own.</span></div></li>
+    <li><span class="hi">🎙️</span><div><b>Speak</b><span>Record a short wish for the couple.</span></div></li>
+    <li><span class="hi">✍️</span><div><b>Write</b><span>Leave a little note.</span></div></li>
+    <li><span class="hi">♥</span><div><b>Like</b><span>Tap the heart on anything you love.</span></div></li>
+    <li><span class="hi">⬇</span><div><b>Save</b><span>Tap a photo, then Save.</span></div></li>
+  </ul>
+  <div class="oops">
+    <h3>Oops? Remove it in 3 taps</h3>
+    <div class="s3">
+      <div><i>1</i><span>Album, then <b>Mine</b></span></div>
+      <div><i>2</i><span>Tap your photo</span></div>
+      <div><i>3</i><span>Tap <svg class="i" aria-hidden="true"><use href="#i-trash"/></svg> <b>Delete</b></span></div>
+    </div>
+    <a class="big-btn" href="#album" data-mine>Show my uploads</a>
+    <p class="hint">Only the phone that added it can delete it.</p>
+  </div>
+</section>
+
 <section class="view" id="v-capture">
-  <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2>Capture<small>PHOTOS &amp; VIDEOS</small></h2><span style="width:46px"></span></div>
+  <div class="top"><a class="sq" href="#album" aria-label="Back">←</a><h2>Capture<small>PHOTOS &amp; VIDEOS</small></h2><span style="width:46px"></span></div>
   <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
   <div class="fbar" id="capPreset" hidden style="margin-top:14px"><span>Adding to <b id="capPresetName"></b></span><button type="button" data-clearpreset>Clear</button></div>
   <label class="big-btn">📷 Take a photo<input type="file" id="cam" accept="image/*" capture="environment"></label>
@@ -248,7 +296,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 </section>
 
 <section class="view" id="v-voice">
-  <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2>Voice<small>LEAVE A SPOKEN WISH</small></h2><span style="width:46px"></span></div>
+  <div class="top"><a class="sq" href="#album" aria-label="Back">←</a><h2>Voice<small>LEAVE A SPOKEN WISH</small></h2><span style="width:46px"></span></div>
   <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
 
   <!-- Each block below is shown only in the states listed in data-s (see vState in the script) -->
@@ -300,7 +348,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 </section>
 
 <section class="view" id="v-note">
-  <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2>Note<small>WRITE A WISH</small></h2><span style="width:46px"></span></div>
+  <div class="top"><a class="sq" href="#album" aria-label="Back">←</a><h2>Note<small>WRITE A WISH</small></h2><span style="width:46px"></span></div>
   <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
   <label class="f">Your message</label><textarea id="text" maxlength="600" placeholder="Wishing you both a lifetime of love…"></textarea>
   <button class="big-btn" id="sendNote">Send note</button>
@@ -309,7 +357,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 
 <nav>
   <a href="#home"><span>⌂</span>Home</a><a href="#album"><span>🖼️</span>Album</a>
-  <a href="#capture" class="cam"><span>📸</span>Capture</a>
+  <a href="#capture" class="cam"><span>📸</span>Add yours</a>
   <a href="#voice"><span>🎙️</span>Voice</a><a href="#note"><span>✍️</span>Note</a>
 </nav>
 <div id="lb"><div id="lbBody"></div><p class="lbcap" id="lbCap"></p><div class="chips" id="lbMoment" hidden></div><div class="row">
@@ -362,7 +410,7 @@ const ready=fetch('/api/config').then(r=>r.json()).then(c=>{
 }).catch(()=>{});
 
 function route(){
-  const v=location.hash.slice(1)||'home';
+  const v=location.hash.slice(1)||'album';          // the album is the first page
   $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
   $('nav').style.display=v==='home'?'none':'flex';
   $$('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));
@@ -416,7 +464,7 @@ function drawFeed(){
   cur=null;drawFbar();
   const l=items.filter(i=>typeOk(i)&&(!fcat||i.cat===fcat));
   $('#gcount').textContent=l.length+(l.length===1?' memory':' memories');
-  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':fcat?`Nothing in ${esc(fcat)} yet. Tap + on it above to add the first one.`:'Nothing here yet. Tap + on a story or Capture to add the first memory.'}</p>`;
+  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':fcat?`Nothing in ${esc(fcat)} yet. Tap + on it above to add the first one.`:'Nothing here yet. Tap the 📸 button below to add the first memory.'}</p>`;
 }
 function paintLike(id){
   const it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
@@ -574,7 +622,7 @@ async function uploadFiles(list){
       if(b.cat!==cat&&r.id)tagItem(r.id,b.cat).then(k=>{if(k)d.cat=b.cat})}   // a moment was tapped while this one was uploading
     paint()}};
   await Promise.all([worker(),worker(),worker()]);
-  b.finished=true;
+  b.finished=true;if(ok)markDid();
   st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload.</div>`
     :`<div class="msg ok">✓ ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Album → <a href="#album" data-mine>Mine</a> lets you delete it or change its moment.</small></div>`;
   if(batch!==b)return;                           // a newer batch took over the sheet
@@ -707,7 +755,7 @@ $('#sendVoice').onclick=async()=>{
   b.disabled=redo.disabled=false;b.textContent=label;
   if(e){vState('review');$('#vStatus').innerHTML=`<div class="msg err">${esc(e)}. Tap Send to try again.</div>`;return}
   $('#prev').pause();V.blob=null;if(V.url){URL.revokeObjectURL(V.url);V.url=''}
-  vState('done');
+  markDid();vState('done');
 };
 
 // ----- note -----
@@ -715,10 +763,14 @@ $('#sendNote').onclick=async()=>{
   const text=$('#text').value.trim();if(!text){$('#nStatus').innerHTML='<div class="msg err">Write a few words first.</div>';return}
   await ready;
   const r=await fetch('/note',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:me(),text})}).catch(()=>null);
-  if(r&&r.ok){$('#text').value='';$('#nStatus').innerHTML='<div class="msg ok">Thank you! Your note was sent. You can delete it later from the album → <a href="#album" data-mine style="color:var(--gold)">Mine</a>.</div>'}
+  if(r&&r.ok){markDid();$('#text').value='';$('#nStatus').innerHTML='<div class="msg ok">Thank you! Your note was sent. You can delete it later from the album → <a href="#album" data-mine style="color:var(--gold)">Mine</a>.</div>'}
   else $('#nStatus').innerHTML='<div class="msg err">Could not send. Check your connection and try again.</div>';
 };
 
+// the invitation (glowing button + top card) goes away once this phone has added something
+function refreshInvite(){const did=ls.get('did')==='1';$('#invite').hidden=did;$('nav a.cam').classList.toggle('glow',!did)}
+function markDid(){ls.set('did','1');refreshInvite()}
+refreshInvite();
 let dens=ls.get('dens')==='3'?3:2;                       // 2 = large tiles (default), 3 = small
 function applyDens(){$('#grid').classList.toggle('dense',dens===3);$$('.seg button').forEach(b=>{const on=+b.dataset.dens===dens;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
 applyDens();

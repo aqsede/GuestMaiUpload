@@ -10,7 +10,7 @@ docker compose up -d --build
 (Upgrading from v1? Keep the same `photos` volume; old uploads are adopted automatically.)
 
 ## Pages
-- `/` guest app: Home, Album (stories, filters, likes, downloads), Capture, Voice, Note
+- `/` guest app. **Opens on the Album** (the QR lands here). The centre "Add yours" camera button ripples and a slim "Add your photos" card shows until that phone has added something (then both go quiet). Pages: Album (stories, filters, likes, downloads), Capture, Voice, Note, Home (welcome), and **?** = a tiny "How to" page with a 3-tap "Oops? Remove it" guide
 - `/admin` (basic auth): gallery of everything incl. **HEIC** (shown as JPEG, original downloadable), delete, **Download all (.zip)**, print table QR card, upload cover photo
 
 ## Guests can delete their own uploads
