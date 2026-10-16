@@ -155,6 +155,14 @@ app.delete('/api/item/:id', device, (q, s) => {
   remove(e);
   s.json({ ok: true });
 });
+// Change which "moment" (story) one of your own uploads belongs to.
+app.post('/api/item/:id/moment', device, (q, s) => {
+  const e = db[q.params.id];
+  if (!e) return s.status(404).json({ error: 'Not found' });
+  if (!e.owner || e.owner !== q.dev) return s.status(403).json({ error: 'You can only change what this device uploaded' });
+  e.cat = okCat(q.body.cat); save();
+  s.json({ ok: true, cat: e.cat });
+});
 app.get('/thumb/:id', gate, thumbH);
 app.get('/media/:id', gate, mediaH);
 app.post('/like/:id', gate, (q, s) => {

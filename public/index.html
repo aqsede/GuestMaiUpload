@@ -48,6 +48,10 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .tabs{display:flex;gap:8px;overflow-x:auto;margin:0 -20px 14px;padding:2px 20px;scrollbar-width:none}
 .chip{flex:none;padding:10px 20px;border-radius:30px;border:1px solid var(--line);background:var(--paper);font:600 .78rem Poppins;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);cursor:pointer}
 .chip.on{background:#1d1710;color:#fff;border-color:#1d1710}
+.fbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;padding:6px 6px 6px 16px;border-radius:20px;background:#1d1710;color:#fff;font-size:.82rem}
+.fbar b{font-weight:600}
+.fbar button{flex:none;border:0;border-radius:15px;background:var(--gold2);color:#1d1710;padding:0 14px;min-height:38px;font:600 .78rem Poppins;cursor:pointer}
+#lbMoment{justify-content:center;max-width:440px}
 
 /* ---------- album: polaroid-style tiles ----------
    The picture (or note / voice player) is on top; the name, time and heart sit BELOW it on their own
@@ -98,7 +102,7 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 label.f{display:block;font-size:.85rem;color:var(--soft);margin:14px 0 6px}
 input.nm,textarea{width:100%;font:inherit;padding:13px 16px;border-radius:16px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
 textarea{min-height:150px;resize:vertical}
-.chips{display:flex;flex-wrap:wrap;gap:8px}.chips .chip{padding:8px 14px;font-size:.7rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips .chip{padding:9px 12px;font-size:.66rem;letter-spacing:.07em}
 .big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;padding:20px;border-radius:22px;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;font:600 1.1rem Poppins;cursor:pointer;position:relative}
 .big-btn.alt{background:var(--paper);color:var(--gold);border:1px solid var(--gold2)}
 .big-btn.danger{background:linear-gradient(#b8443a,#97312a)}
@@ -194,6 +198,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <h3>Guest Stories</h3>
   <div class="stories" id="stories"></div>
   <div class="tabs" id="tabs"></div>
+  <div class="fbar" id="fbar" hidden><span id="fbTxt"></span><button type="button" data-cat="">Show all</button></div>
   <p class="notice" id="privNote" hidden>The couple will open the album later. For now you can see (and delete) what you added from this phone.</p>
   <div class="grid" id="grid"></div>
 </section>
@@ -201,11 +206,19 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 <section class="view" id="v-capture">
   <div class="top"><a class="sq" href="#home" aria-label="Back">←</a><h2>Capture<small>PHOTOS &amp; VIDEOS</small></h2><span style="width:46px"></span></div>
   <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
-  <label class="f">Which moment is this?</label><div class="chips" id="capChips"></div>
+  <div class="fbar" id="capPreset" hidden style="margin-top:14px"><span>Adding to <b id="capPresetName"></b></span><button type="button" data-clearpreset>Clear</button></div>
   <label class="big-btn">📷 Take a photo<input type="file" id="cam" accept="image/*" capture="environment"></label>
   <label class="big-btn alt">🖼️ Choose photos &amp; videos<input type="file" id="pick" accept="image/*,video/*,.heic,.heif" multiple></label>
   <p class="hint">Pick as many as you like. Full quality, no sign-up.</p>
-  <div id="status" aria-live="polite"></div><div class="thumbs" id="thumbs"></div>
+  <div id="status" aria-live="polite"></div>
+  <!-- appears as soon as files are picked; uploading never waits for it -->
+  <div class="panel" id="tagCard" hidden>
+    <h4>Which moment is this?</h4>
+    <p>Optional, it helps everyone find it in the album. <span id="tagCount"></span></p>
+    <div class="chips" id="capChips"></div>
+    <p class="hint" id="tagMsg" aria-live="polite" style="text-align:left"></p>
+  </div>
+  <div class="thumbs" id="thumbs"></div>
 </section>
 
 <section class="view" id="v-voice">
@@ -273,7 +286,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <a href="#capture" class="cam"><span>📸</span>Capture</a>
   <a href="#voice"><span>🎙️</span>Voice</a><a href="#note"><span>✍️</span>Note</a>
 </nav>
-<div id="lb"><div id="lbBody"></div><div class="row">
+<div id="lb"><div id="lbBody"></div><div class="chips" id="lbMoment" hidden></div><div class="row">
   <a class="pill" id="lbDl" href="#" download><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Save</a>
   <button class="pill del" id="lbDel" type="button" hidden><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</button>
   <button class="pill" id="lbX" type="button">Close</button></div></div>
@@ -288,7 +301,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const ic=(n,c='')=>`<svg class="i ${c}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
-let cfg={stories:[],maxMb:100},items=[],ftype='all',fcat='',capCat='',priv=false,lastSig='',cur=null,pendingDel=null;
+let cfg={stories:[],maxMb:100},items=[],ftype='all',fcat='',capCat='',capPreset='',batch=null,priv=false,lastSig='',cur=null,pendingDel=null;
 let liked;try{liked=new Set(JSON.parse(ls.get('liked')||'[]'))}catch{liked=new Set()}
 const me=()=>(ls.get('guestName')||'').trim();
 const emo=s=>s.split(' ')[0], lbl=s=>s.split(' ').slice(1).join(' ')||s;
@@ -305,7 +318,7 @@ const ready=fetch('/api/config').then(r=>r.json()).then(c=>{
   $('#date').textContent=c.date?'📅 '+c.date:'';$('#venue').textContent=c.venue?'📍 '+c.venue:'';
   $('#blurb').innerHTML=esc(c.blurb).replace(/\n/g,'<br>');
   $$('.t-title').forEach(e=>e.firstChild.textContent=c.brand||c.title);
-  $('#stories').innerHTML=c.stories.map(s=>`<button class="story" data-cat="${esc(s)}"><div class="ring">${esc(emo(s))}<i data-add="${esc(s)}">+</i></div><em>${esc(lbl(s))}</em></button>`).join('');
+  $('#stories').innerHTML='<button class="story on" data-cat=""><div class="ring">✨</div><em>Everything</em></button>'+c.stories.map(s=>`<button class="story" data-cat="${esc(s)}"><div class="ring">${esc(emo(s))}<i data-add="${esc(s)}">+</i></div><em>${esc(lbl(s))}</em></button>`).join('');
   $('#capChips').innerHTML=['Anywhere',...c.stories].map((s,i)=>`<button class="chip ${i?'':'on'}" data-cap="${i?esc(s):''}">${esc(s)}</button>`).join('');
   drawTabs();
 }).catch(()=>{});
@@ -316,13 +329,21 @@ function route(){
   $('nav').style.display=v==='home'?'none':'flex';
   $$('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));
   if(v==='album')loadFeed();
+  if(v==='capture')drawPreset();
   v==='voice'?voiceEnter():voiceLeave();
   scrollTo(0,0);
 }
 addEventListener('hashchange',route);
 
 // ----- album -----
-const sigOf=a=>JSON.stringify(a.map(i=>[i.id,i.likes,!!i.mine]));
+const sigOf=a=>JSON.stringify(a.map(i=>[i.id,i.likes,!!i.mine,i.cat]));
+const typeOk=i=>ftype==='all'||(ftype==='mine'?i.mine:i.type===ftype);
+// Tells the guest which moment is selected and how to leave it, so nothing looks "missing".
+function drawFbar(){
+  const b=$('#fbar');b.hidden=!fcat;if(!fcat)return;
+  const n=items.filter(i=>typeOk(i)&&i.cat===fcat).length;
+  $('#fbTxt').innerHTML=`Showing <b>${esc(fcat)}</b> · ${n} ${n===1?'memory':'memories'}`;
+}
 async function loadFeed(){
   try{
     let r=await fetch('/api/feed');
@@ -357,9 +378,9 @@ function card(i){
   <div class="foot"><time>${t}</time><button class="like ${on?'on':''}" data-like="${i.id}" type="button" aria-pressed="${on}" aria-label="Like">${ic('heart')}<span>${i.likes}</span></button></div></div></article>`;
 }
 function drawFeed(){
-  cur=null;
-  const l=items.filter(i=>(ftype==='all'||(ftype==='mine'?i.mine:i.type===ftype))&&(!fcat||i.cat===fcat));
-  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':'Nothing here yet. Tap + on a story or Capture to add the first memory.'}</p>`;
+  cur=null;drawFbar();
+  const l=items.filter(i=>typeOk(i)&&(!fcat||i.cat===fcat));
+  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':fcat?`Nothing in ${esc(fcat)} yet. Tap + on it above to add the first one.`:'Nothing here yet. Tap + on a story or Capture to add the first memory.'}</p>`;
 }
 function paintLike(id){
   const it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
@@ -392,13 +413,22 @@ async function doDelete(){
 }
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-like],[data-open],[data-del],[data-play],[data-mine],#refresh,#lbX,#lb,#shNo,#shYes,#sheet');
+  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],#refresh,#lbX,#lb,#shNo,#shYes,#sheet');
   if(!t)return;
-  if(t.dataset.add!==undefined){capCat=t.dataset.add;syncCap();location.hash='#capture';return}
+  if(t.dataset.add!==undefined){capPreset=capCat=t.dataset.add;syncCap();drawPreset();location.hash='#capture';return}
   if(t.dataset.mine!==undefined){ftype='mine';return}                  // link continues to #album
-  if(t.dataset.cat!==undefined){fcat=fcat===t.dataset.cat?'':t.dataset.cat;$$('.story').forEach(s=>s.classList.toggle('on',s.dataset.cat===fcat));drawFeed()}
+  if(t.dataset.cat!==undefined){
+    const c=t.dataset.cat;fcat=!c||fcat===c?'':c;                       // "Everything" (or tapping the active moment again) clears the filter
+    $$('.story').forEach(s=>s.classList.toggle('on',s.dataset.cat===fcat));drawFeed();
+  }
+  else if(t.dataset.clearpreset!==undefined){capPreset=capCat='';syncCap();drawPreset()}
+  else if(t.dataset.lbcap!==undefined){
+    const c=t.dataset.lbcap;
+    if(await tagItem(t.dataset.id,c)){$$('#lbMoment .chip').forEach(x=>x.classList.toggle('on',x===t));lastSig=sigOf(items);drawFeed();toast(c?'Moved to '+c:'Moved to Anywhere')}
+    else toast('Couldn\'t change it. Please try again.');
+  }
   else if(t.dataset.type){ftype=t.dataset.type;drawTabs();drawFeed()}
-  else if(t.dataset.cap!==undefined){capCat=t.dataset.cap;syncCap()}
+  else if(t.dataset.cap!==undefined){capCat=t.dataset.cap;syncCap();applyCat()}
   else if(t.dataset.like){
     const id=t.dataset.like,it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
     on?liked.delete(id):liked.add(id);ls.set('liked',JSON.stringify([...liked]));
@@ -415,6 +445,8 @@ document.addEventListener('click',async e=>{
       :it.type==='video'?`<video src="/media/${it.id}" controls autoplay playsinline></video>`:`<img src="/media/${it.id}" alt="">`;
     $('#lbDl').hidden=it.type==='note';$('#lbDl').href=`/media/${it.id}?dl=1`;
     const d=$('#lbDel');d.hidden=!it.mine;d.dataset.del=it.id;
+    const mm=$('#lbMoment');mm.hidden=!(it.mine&&it.type!=='note'&&cfg.stories.length);   // own photos/videos: change the moment
+    if(!mm.hidden)mm.innerHTML=['Anywhere',...cfg.stories].map((s,i)=>`<button class="chip ${(i?s:'')===(it.cat||'')?'on':''}" data-lbcap="${i?esc(s):''}" data-id="${it.id}" type="button">${esc(s)}</button>`).join('');
     $('#lb').classList.add('on');
   }
   else if(t.dataset.del)askDelete(t.dataset.del);
@@ -428,31 +460,56 @@ setInterval(()=>{if(location.hash==='#album'&&document.visibilityState==='visibl
 const syncCap=()=>$$('#capChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.cap===capCat));
 
 // ----- upload -----
+// Uploading starts the moment files are picked: no question first. While it runs, an optional
+// "Which moment is this?" card tags the whole batch. Files already uploaded are updated; queued ones just use the new tag.
 async function send(file,cat,onP,extra){
   await ready;
   return new Promise(res=>{
     const x=new XMLHttpRequest();
     x.open('POST','/upload?name='+encodeURIComponent(me())+'&cat='+encodeURIComponent(cat||'')+(extra||''));
     x.upload.onprogress=e=>e.lengthComputable&&onP(e.loaded);
-    x.onload=()=>{let m='';try{m=JSON.parse(x.responseText).error}catch{}res(x.status===200?'':(m||'Upload failed'))};
-    x.onerror=()=>res('Connection lost');
+    x.onload=()=>{let j={};try{j=JSON.parse(x.responseText)}catch{}res(x.status===200?{err:'',id:j.id}:{err:j.error||'Upload failed'})};
+    x.onerror=()=>res({err:'Connection lost'});
     const fd=new FormData();fd.append('file',file);x.send(fd);
   });
 }
+function drawPreset(){const p=$('#capPreset');p.hidden=!capPreset;if(capPreset)$('#capPresetName').textContent=capPreset}
+async function tagItem(id,cat){
+  try{
+    const r=await fetch('/api/item/'+id+'/moment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cat})});
+    if(r.ok){const it=items.find(x=>x.id===id);if(it)it.cat=cat;return true}
+  }catch{}
+  return false;
+}
+async function applyCat(){                       // a moment was tapped on the tag card
+  const b=batch;if(!b)return;
+  b.cat=capCat;                                  // files not uploaded yet will be sent with this tag
+  const todo=b.done.filter(d=>d.cat!==capCat);   // files already uploaded get updated
+  const ok=(await Promise.all(todo.map(async d=>{const k=await tagItem(d.id,capCat);if(k)d.cat=capCat;return k}))).every(Boolean);
+  $('#tagMsg').textContent=ok?`✓ Saved to ${capCat||'Anywhere'}`:'Couldn\'t update some of them. Tap a moment again to retry.';
+}
 async function uploadFiles(list){
   if(!list.length)return;
+  capCat=capPreset;syncCap();                    // each new batch starts from the "+" moment the guest came from, else Anywhere
+  $('#tagMsg').textContent='';$('#tagCard').hidden=false;
+  $('#tagCount').textContent=list.length>1?`Applies to all ${list.length} you just picked.`:'';
+  const b=batch={cat:capCat,done:[]};
   const total=list.reduce((s,f)=>s+f.size,0)||1,loaded=list.map(()=>0);
   let ok=0,bad=0,next=0,last='';
   const st=$('#status');st.innerHTML='<div class="msg" id="t"></div><div class="bar"><i id="b"></i></div>';
   const paint=()=>{$('#b').style.width=Math.min(100,loaded.reduce((a,b)=>a+b,0)/total*100)+'%';$('#t').textContent=`Uploading ${ok+bad} of ${list.length}…`};
   const tiles=list.map(f=>{const d=document.createElement('div');if(f.type.startsWith('image/')&&!/hei[cf]/i.test(f.type))d.style.backgroundImage=`url(${URL.createObjectURL(f)})`;$('#thumbs').prepend(d);return d});
   paint();
-  const worker=async()=>{while(next<list.length){const i=next++,p=l=>{loaded[i]=l;paint()};
-    let e=await send(list[i],capCat,p);if(e)e=await send(list[i],capCat,p);
-    if(e){bad++;last=e;tiles[i].className='fail'}else{ok++;loaded[i]=list[i].size;tiles[i].className='done'}paint()}};
+  const worker=async()=>{while(next<list.length){const i=next++,p=l=>{loaded[i]=l;paint()},cat=b.cat;
+    let r=await send(list[i],cat,p);if(r.err)r=await send(list[i],cat,p);
+    if(r.err){bad++;last=r.err;tiles[i].className='fail'}
+    else{ok++;loaded[i]=list[i].size;tiles[i].className='done';
+      const d={id:r.id,cat};b.done.push(d);
+      if(b.cat!==cat&&r.id)tagItem(r.id,b.cat).then(k=>{if(k)d.cat=b.cat})}   // the guest picked a moment while this one was uploading
+    paint()}};
   await Promise.all([worker(),worker(),worker()]);
   st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload: ${esc(last)}. Try again.</div>`
-    :`<div class="msg ok">Thank you! ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Open the album → <a href="#album" data-mine>Mine</a> to delete it.</small></div>`;
+    :`<div class="msg ok">Thank you! ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Open the album → <a href="#album" data-mine>Mine</a> to delete it or change its moment.</small></div>`;
 }
 ['cam','pick'].forEach(id=>$('#'+id).addEventListener('change',e=>{const l=[...e.target.files];e.target.value='';uploadFiles(l)}));
 
@@ -573,7 +630,7 @@ $('#sendVoice').onclick=async()=>{
   vState('sending');b.disabled=redo.disabled=true;b.textContent='Sending…';$('#vbar').style.width='0';$('#vStatus').innerHTML='';
   const ext=/mp4|aac/.test(V.blob.type)?'m4a':/ogg/.test(V.blob.type)?'ogg':/mpeg|mp3/.test(V.blob.type)?'mp3':/wav/.test(V.blob.type)?'wav':'webm';
   const f=V.blob instanceof File?V.blob:new File([V.blob],'voice.'+ext,{type:V.blob.type||'audio/webm'});
-  const e=await send(f,'',l=>{$('#vbar').style.width=Math.min(100,l/f.size*100)+'%'},'&kind=voice'+(V.dur?'&dur='+V.dur:''));
+  const e=(await send(f,'',l=>{$('#vbar').style.width=Math.min(100,l/f.size*100)+'%'},'&kind=voice'+(V.dur?'&dur='+V.dur:''))).err;
   b.disabled=redo.disabled=false;b.textContent=label;
   if(e){vState('review');$('#vStatus').innerHTML=`<div class="msg err">${esc(e)}. Tap Send to try again.</div>`;return}
   $('#prev').pause();V.blob=null;if(V.url){URL.revokeObjectURL(V.url);V.url=''}
