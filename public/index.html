@@ -53,48 +53,62 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .fbar button{flex:none;border:0;border-radius:15px;background:var(--gold2);color:#1d1710;padding:0 14px;min-height:38px;font:600 .78rem Poppins;cursor:pointer}
 #lbMoment{justify-content:center;max-width:440px}
 
-/* ---------- album: polaroid-style tiles ----------
-   The picture (or note / voice player) is on top; the name, time and heart sit BELOW it on their own
-   lines, so the text gets the full tile width instead of fighting the buttons for space. */
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;grid-auto-flow:dense;align-items:start}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:6px 6px 2px;box-shadow:0 6px 18px #a8823f14;min-width:0}
+/* ---------- album: light tiles ----------
+   A square picture with just a small heart on it, and the name underneath. Save / Delete / Change moment live in the
+   full-screen view (tap any tile), so the grid stays calm. A toggle switches to a denser 3-column grid. */
+.gbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;font-size:.78rem;color:var(--soft)}
+.seg{display:flex;gap:2px;background:#f2e3c6;border-radius:13px;padding:3px}
+.seg button{width:40px;height:32px;border:0;border-radius:10px;background:none;color:var(--soft);display:grid;place-items:center;cursor:pointer}
+.seg button.on{background:var(--paper);color:var(--ink);box-shadow:0 1px 4px #0002}
+.seg .i{width:18px;height:18px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px;grid-auto-flow:dense;align-items:start}
+.grid.dense{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 6px}
+.card{min-width:0}
 .card.wide{grid-column:1/-1}
-.media{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:#1d1710;color:#fff}
+.media{position:relative;aspect-ratio:1;border-radius:20px;overflow:hidden;background:#1d1710;color:#fff;box-shadow:0 4px 14px #a8823f26}
+.dense .media{border-radius:14px}
 .media img,.media video{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
-.media .pb{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#0008;color:#fff;display:grid;place-items:center;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-.tools{position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:2}
-.tool{width:40px;height:40px;padding:0;border-radius:50%;border:0;background:#fffaf2ee;color:var(--ink);display:grid;place-items:center;cursor:pointer;text-decoration:none;box-shadow:0 2px 8px #0003}
-.tool.del{color:var(--err)}
-.cap{padding:8px 8px 0}
-.who{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;font:600 .88rem/1.3 Poppins;color:var(--ink)}
-.who .ty{margin-right:6px}
-.foot{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
-.foot time{font-size:.74rem;color:var(--soft)}
-.like{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 13px;border:0;border-radius:20px;background:#f8ecd6;color:var(--soft);font:600 .85rem Poppins;cursor:pointer}
+.media .pb{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;background:#0008;color:#fff;display:grid;place-items:center;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.media .pb .i{width:16px;height:16px}
+.mb{position:absolute;top:8px;left:8px;z-index:1;padding:1px 8px;border-radius:10px;background:#000a;color:#fff;font:600 .55rem/1.7 Poppins;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}
+.dense .mb{top:5px;left:5px;padding:0 6px;font-size:.5rem}
+.ov{display:none}
+.dense .ov{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;padding:18px 40px 6px 7px;background:linear-gradient(transparent,#000b);color:#fff;font:600 .62rem Poppins;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.cap{padding:7px 4px 0}
+.dense .cap{display:none}
+.who{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;font:600 .8rem/1.3 Poppins;color:var(--ink)}
+.who .ty{margin-right:5px}
+.like{position:absolute;right:8px;bottom:8px;z-index:2;display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px;border:0;border-radius:15px;background:#fffaf2ea;color:var(--soft);font:600 .76rem Poppins;cursor:pointer;box-shadow:0 1px 6px #0003}
+.like::after{content:"";position:absolute;inset:-7px}
+.like .i{width:16px;height:16px}
 .like.on{background:#fde6ea;color:var(--heart)}.like.on .i{fill:currentColor}
+.dense .like{right:5px;bottom:5px;height:24px;padding:0 7px;gap:3px;font-size:.66rem}.dense .like .i{width:12px;height:12px}
 .like.pop .i{animation:pop .35s}
 @keyframes pop{40%{transform:scale(1.45)}}
 /* notes */
-.media.note{background:linear-gradient(#fffdf8,#fbf1e1);border:1px solid var(--line);color:var(--ink)}
-.card.wide .media.note{aspect-ratio:auto;min-height:150px}
-.nt{display:flex;flex-direction:column;width:100%;height:100%;min-height:inherit;padding:12px 14px 12px;text-align:left;background:none;border:0;font:inherit;color:inherit;cursor:pointer}
-.nt .q{font:700 3rem/.8 'Playfair Display',serif;color:var(--gold2);height:26px}
-.nt-t{margin-top:8px;font:italic 400 .98rem/1.42 'Playfair Display',Georgia,serif;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
-.card.wide .nt-t{-webkit-line-clamp:6;font-size:1.05rem;padding-right:4px}
-.nt .more{margin-top:auto;padding-top:8px;font:600 .64rem Poppins;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.media.note{background:linear-gradient(#fffdf8,#fbf1e1);color:var(--ink);box-shadow:0 4px 14px #a8823f26,inset 0 0 0 1px var(--line)}
+.card.wide .media.note{aspect-ratio:auto;min-height:120px}
+.nt{display:flex;flex-direction:column;width:100%;height:100%;min-height:inherit;padding:10px 12px 42px;text-align:left;background:none;border:0;font:inherit;color:inherit;cursor:pointer}
+.nt .q{font:700 2.4rem/.8 'Playfair Display',serif;color:var(--gold2);height:20px}
+.nt-t{margin-top:6px;font:italic 400 .92rem/1.4 'Playfair Display',Georgia,serif;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.card.wide .nt-t{-webkit-line-clamp:5;font-size:1rem}
+.nt .more{margin-top:auto;padding-top:6px;font:600 .6rem Poppins;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.dense .nt{padding:7px 8px 30px}.dense .nt .q{font-size:1.6rem;height:14px}.dense .nt-t{font-size:.7rem;-webkit-line-clamp:5}.dense .nt .more{display:none}
+.dense .card.wide .nt-t{font-size:.9rem}
 /* voice */
-.vo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(120% 90% at 50% 0,#4a3720,#17110a);color:#f6e9cf}
-.vplay{width:68px;height:68px;padding:0;border-radius:50%;border:2px solid var(--gold2);background:#ffffff14;color:#fff;display:grid;place-items:center;cursor:pointer}
-.vplay .i{width:28px;height:28px}
+.vo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-bottom:20px;background:radial-gradient(120% 90% at 50% 0,#4a3720,#17110a);color:#f6e9cf;cursor:pointer}
+.vplay{width:54px;height:54px;padding:0;border-radius:50%;border:2px solid var(--gold2);background:#ffffff14;color:#fff;display:grid;place-items:center;cursor:pointer}
+.vplay .i{width:22px;height:22px}
 .vplay .pa{display:none}.vo.playing .vplay .pl{display:none}.vo.playing .vplay .pa{display:block}
-.eq{display:flex;gap:4px;align-items:center;height:26px}
-.eq i{display:block;width:4px;border-radius:2px;background:var(--gold2)}
+.eq{display:flex;gap:3px;align-items:center;height:20px}
+.eq i{display:block;width:3px;border-radius:2px;background:var(--gold2)}
 .eq i:nth-child(1){height:30%}.eq i:nth-child(2){height:60%}.eq i:nth-child(3){height:100%}.eq i:nth-child(4){height:55%}.eq i:nth-child(5){height:80%}.eq i:nth-child(6){height:40%}.eq i:nth-child(7){height:25%}
 .vo.playing .eq i{animation:eq 1s ease-in-out infinite}
 .vo.playing .eq i:nth-child(2n){animation-delay:.2s}.vo.playing .eq i:nth-child(3n){animation-delay:.4s}
 @keyframes eq{50%{height:100%}}
-.vt{font:500 .78rem Poppins;letter-spacing:.05em}
+.vt{font:500 .72rem Poppins;letter-spacing:.05em}
 .vo .pg{position:absolute;left:0;right:0;bottom:0;height:4px;background:#ffffff22}.vo .pg i{display:block;height:100%;width:0;background:var(--gold2)}
+.dense .vplay{width:40px;height:40px}.dense .vplay .i{width:17px;height:17px}.dense .eq,.dense .vt{display:none}.dense .vo{padding-bottom:0}
 /* private-album notice + empty state */
 .notice{background:var(--paper);border:1px dashed var(--gold2);border-radius:18px;padding:12px 16px;font-size:.85rem;color:var(--soft);margin-bottom:14px}
 .empty{grid-column:1/-1;text-align:center;color:var(--soft);padding:40px 10px}
@@ -157,7 +171,8 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
 .note-full{max-width:420px;max-height:76dvh;overflow:auto;background:var(--paper);border-radius:24px;padding:22px 24px;color:var(--ink)}
 .note-full .q{display:block;font:700 3.6rem/.7 'Playfair Display',serif;color:var(--gold2);height:30px}
 .note-full p{margin:10px 0 14px;font:italic 400 1.2rem/1.5 'Playfair Display',serif;white-space:pre-wrap;overflow-wrap:anywhere}
-.note-full small{color:var(--soft);font-size:.85rem}
+.vofull{text-align:center;min-width:260px}.vofull .big{font-size:2.6rem;line-height:1.2}.vofull audio{width:100%;margin-top:10px}
+.lbcap{margin:0;color:#fff;font:500 .9rem Poppins;opacity:.92;text-align:center}
 #sheet,#up{position:fixed;inset:0;z-index:30;background:#0007;display:flex;align-items:flex-end;justify-content:center}
 #up{z-index:28}
 .sheet{width:100%;max-width:480px;background:var(--paper);border-radius:28px 28px 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease-out}
@@ -191,6 +206,8 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 8 4.5z"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-grid2" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="i-grid3" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="5" height="5" rx="1"/><rect x="9.5" y="2.5" width="5" height="5" rx="1"/><rect x="16.5" y="2.5" width="5" height="5" rx="1"/><rect x="2.5" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="16.5" y="9.5" width="5" height="5" rx="1"/><rect x="2.5" y="16.5" width="5" height="5" rx="1"/><rect x="9.5" y="16.5" width="5" height="5" rx="1"/><rect x="16.5" y="16.5" width="5" height="5" rx="1"/></symbol>
 </svg>
 
 <section class="view center" id="v-home">
@@ -214,6 +231,9 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <div class="tabs" id="tabs"></div>
   <div class="fbar" id="fbar" hidden><span id="fbTxt"></span><button type="button" data-cat="">Show all</button></div>
   <p class="notice" id="privNote" hidden>The couple will open the album later. For now you can see (and delete) what you added from this phone.</p>
+  <div class="gbar"><span id="gcount"></span><div class="seg" role="group" aria-label="Tile size">
+    <button type="button" data-dens="2" aria-label="Large tiles"><svg class="i" aria-hidden="true"><use href="#i-grid2"/></svg></button>
+    <button type="button" data-dens="3" aria-label="Small tiles"><svg class="i" aria-hidden="true"><use href="#i-grid3"/></svg></button></div></div>
   <div class="grid" id="grid"></div>
 </section>
 
@@ -292,7 +312,7 @@ nav a.cam span{width:68px;height:68px;border-radius:50%;background:#1d1710;borde
   <a href="#capture" class="cam"><span>📸</span>Capture</a>
   <a href="#voice"><span>🎙️</span>Voice</a><a href="#note"><span>✍️</span>Note</a>
 </nav>
-<div id="lb"><div id="lbBody"></div><div class="chips" id="lbMoment" hidden></div><div class="row">
+<div id="lb"><div id="lbBody"></div><p class="lbcap" id="lbCap"></p><div class="chips" id="lbMoment" hidden></div><div class="row">
   <a class="pill" id="lbDl" href="#" download><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Save</a>
   <button class="pill del" id="lbDel" type="button" hidden><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</button>
   <button class="pill" id="lbX" type="button">Close</button></div></div>
@@ -381,23 +401,21 @@ function drawTabs(){
 }
 const KIND={photo:['📷','Photo'],video:['🎬','Video'],voice:['🎙️','Voice message'],note:['✍️','Note']};
 function card(i){
-  const t=new Date(i.time).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
   const who=esc(i.name||'A guest'),on=liked.has(i.id),[em,kind]=KIND[i.type]||KIND.photo;
   const wide=i.type==='note'&&(i.text.length>90||i.text.includes('\n'));
   let m;
   if(i.type==='photo')m=`<img loading="lazy" src="/thumb/${i.id}" data-open="${i.id}" alt="Photo by ${who}">`;
   else if(i.type==='video')m=`<video src="/media/${i.id}#t=0.1" preload="metadata" muted playsinline data-open="${i.id}"></video><span class="pb">${ic('play','fill')}</span>`;
-  else if(i.type==='voice')m=`<div class="vo" data-dur="${i.dur||0}"><button class="vplay" data-play type="button" aria-label="Play voice message from ${who}">${ic('play','fill pl')}${ic('pause','fill pa')}</button><div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vt">${i.dur?fmt(i.dur):'Voice'}</span><div class="pg"><i></i></div><audio preload="none" src="/media/${i.id}"></audio></div>`;
+  else if(i.type==='voice')m=`<div class="vo" data-open="${i.id}" data-dur="${i.dur||0}"><button class="vplay" data-play type="button" aria-label="Play voice message from ${who}">${ic('play','fill pl')}${ic('pause','fill pa')}</button><div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vt">${i.dur?fmt(i.dur):'Voice'}</span><div class="pg"><i></i></div><audio preload="none" src="/media/${i.id}"></audio></div>`;
   else m=`<button class="nt" data-open="${i.id}" type="button" aria-label="Read note from ${who}"><span class="q" aria-hidden="true">“</span><span class="nt-t">${esc(i.text)}</span>${i.text.length>(wide?190:70)?'<span class="more">Read more</span>':''}</button>`;
-  const tools=(i.type==='note'?'':`<a class="tool" href="/media/${i.id}?dl=1" download aria-label="Save to your phone">${ic('download')}</a>`)
-    +(i.mine?`<button class="tool del" data-del="${i.id}" type="button" aria-label="Delete mine">${ic('trash')}</button>`:'');
-  return `<article class="card ${wide?'wide':''}" aria-label="${kind} from ${who}"><div class="media ${i.type==='note'?'note':''}">${m}${tools?`<div class="tools">${tools}</div>`:''}</div>
-  <div class="cap"><b class="who" title="${who}"><span class="ty" aria-hidden="true">${em}</span>${who}</b>
-  <div class="foot"><time>${t}</time><button class="like ${on?'on':''}" data-like="${i.id}" type="button" aria-pressed="${on}" aria-label="Like">${ic('heart')}<span>${i.likes}</span></button></div></div></article>`;
+  return `<article class="card ${wide?'wide':''}" aria-label="${kind} from ${who}"><div class="media ${i.type==='note'?'note':''}">${m}${i.mine?'<span class="mb">Mine</span>':''}<span class="ov" aria-hidden="true">${em} ${who}</span>
+  <button class="like ${on?'on':''}" data-like="${i.id}" type="button" aria-pressed="${on}" aria-label="Like">${ic('heart')}<span>${i.likes}</span></button></div>
+  <div class="cap"><b class="who" title="${who}"><span class="ty" aria-hidden="true">${em}</span>${who}</b></div></article>`;
 }
 function drawFeed(){
   cur=null;drawFbar();
   const l=items.filter(i=>typeOk(i)&&(!fcat||i.cat===fcat));
+  $('#gcount').textContent=l.length+(l.length===1?' memory':' memories');
   $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':fcat?`Nothing in ${esc(fcat)} yet. Tap + on it above to add the first one.`:'Nothing here yet. Tap + on a story or Capture to add the first memory.'}</p>`;
 }
 function paintLike(id){
@@ -431,7 +449,7 @@ async function doDelete(){
 }
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],#refresh,#lbX,#lb,#shNo,#shYes,#sheet,#upX,#upDone,#upRetry');
+  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],[data-dens],#refresh,#lbX,#lb,#shNo,#shYes,#sheet,#upX,#upDone,#upRetry');
   if(!t)return;
   if(t.dataset.add!==undefined){capPreset=capCat=t.dataset.add;syncCap();drawPreset();location.hash='#capture';return}
   if(t.dataset.mine!==undefined){ftype='mine';return}                  // link continues to #album
@@ -459,17 +477,22 @@ document.addEventListener('click',async e=>{
   }
   else if(t.dataset.open){
     const it=items.find(x=>x.id===t.dataset.open);if(!it)return;
-    $('#lbBody').innerHTML=it.type==='note'?`<div class="note-full"><span class="q" aria-hidden="true">“</span><p>${esc(it.text)}</p><small>— ${esc(it.name||'A guest')}</small></div>`
+    if(cur)cur.pause();
+    const when=new Date(it.time).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+    $('#lbBody').innerHTML=it.type==='note'?`<div class="note-full"><span class="q" aria-hidden="true">“</span><p>${esc(it.text)}</p></div>`
+      :it.type==='voice'?`<div class="note-full vofull"><div class="big" aria-hidden="true">🎙️</div><audio controls autoplay src="/media/${it.id}"></audio></div>`
       :it.type==='video'?`<video src="/media/${it.id}" controls autoplay playsinline></video>`:`<img src="/media/${it.id}" alt="">`;
+    $('#lbCap').textContent=`${(KIND[it.type]||KIND.photo)[0]} ${it.name||'A guest'} · ${when}`;
     $('#lbDl').hidden=it.type==='note';$('#lbDl').href=`/media/${it.id}?dl=1`;
     const d=$('#lbDel');d.hidden=!it.mine;d.dataset.del=it.id;
-    const mm=$('#lbMoment');mm.hidden=!(it.mine&&it.type!=='note'&&cfg.stories.length);   // own photos/videos: change the moment
+    const mm=$('#lbMoment');mm.hidden=!(it.mine&&(it.type==='photo'||it.type==='video')&&cfg.stories.length);   // own photos/videos: change the moment
     if(!mm.hidden)mm.innerHTML=['Anywhere',...cfg.stories].map((s,i)=>`<button class="chip ${(i?s:'')===(it.cat||'')?'on':''}" data-lbcap="${i?esc(s):''}" data-id="${it.id}" type="button">${esc(s)}</button>`).join('');
     $('#lb').classList.add('on');
   }
   else if(t.dataset.del)askDelete(t.dataset.del);
   else if(t.id==='shYes')doDelete();
   else if(t.id==='shNo'||(t.id==='sheet'&&e.target===t))closeSheet();
+  else if(t.dataset.dens){dens=+t.dataset.dens;ls.set('dens',dens);applyDens()}
   else if(t.id==='upX'||t.id==='upDone')closeUp();
   else if(t.id==='upRetry'){const f=upFailed;upFailed=[];uploadFiles(f)}
   else if(t.id==='refresh')loadFeed();
@@ -696,6 +719,9 @@ $('#sendNote').onclick=async()=>{
   else $('#nStatus').innerHTML='<div class="msg err">Could not send. Check your connection and try again.</div>';
 };
 
+let dens=ls.get('dens')==='3'?3:2;                       // 2 = large tiles (default), 3 = small
+function applyDens(){$('#grid').classList.toggle('dense',dens===3);$$('.seg button').forEach(b=>{const on=+b.dataset.dens===dens;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+applyDens();
 route();
 </script>
 </body>

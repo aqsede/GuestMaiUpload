@@ -14,7 +14,7 @@ docker compose up -d --build
 - `/admin` (basic auth): gallery of everything incl. **HEIC** (shown as JPEG, original downloadable), delete, **Download all (.zip)**, print table QR card, upload cover photo
 
 ## Guests can delete their own uploads
-Each phone/browser gets a random "device signature" (an HttpOnly cookie, set on first visit). Only a hash of it is stored next to each upload, so the device that uploaded a photo, video, voice memo or note can delete it (Album → **Mine**, or the 🗑 button on its card) and nobody else can. You can still delete anything from `/admin`.
+Each phone/browser gets a random "device signature" (an HttpOnly cookie, set on first visit). Only a hash of it is stored next to each upload, so the device that uploaded a photo, video, voice memo or note can delete it (tap the item in the Album, then **Delete**; the **Mine** chip lists just theirs, and their tiles carry a small "Mine" badge). Tiles stay uncluttered: tap any tile for the full-screen view with Save / Delete / Change moment. The little ▦ switch above the grid toggles large (2 columns) and small (3 columns) tiles and nobody else can. You can still delete anything from `/admin`.
 - Items uploaded before this version have no owner, so only `/admin` can delete them.
 - Clearing browser data / switching browser or using a different phone means that device no longer owns its old uploads.
 - With `ALBUM_PUBLIC=false`, guests still see (and can delete) their own uploads via `/api/mine`.
