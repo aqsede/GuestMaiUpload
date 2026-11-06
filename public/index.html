@@ -10,7 +10,6 @@
 <style>
 :root{--cream:#fbf1e1;--paper:#fffaf2;--gold:#a8823f;--gold2:#d9bd80;--ink:#1e1810;--soft:#7d6d55;--line:#ead9b9;--ok:#2f7a4c;--err:#a8382f;--heart:#c2364a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-/* author display rules (.big-btn, .pill...) would otherwise beat the hidden attribute */
 [hidden]{display:none!important}
 body{margin:0;font:16px/1.5 Poppins,system-ui,sans-serif;color:var(--ink);min-height:100dvh;background:radial-gradient(120% 55% at 50% 0,#fffdf8,var(--cream) 55%,#f3e0c0)}
 .view{display:none;max-width:480px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 20px 130px}
@@ -19,7 +18,7 @@ body{margin:0;font:16px/1.5 Poppins,system-ui,sans-serif;color:var(--ink);min-he
 .center{text-align:center}
 .i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;pointer-events:none}
 .i.fill{fill:currentColor;stroke:none}
-.pillbrand{display:none;align-items:center;gap:12px;margin:0 auto 14px;width:max-content;max-width:100%;padding:10px 26px;border-radius:40px;background:var(--paper);border:1px solid var(--line);flex-direction:column}
+.pillbrand{display:none;align-items:center;gap:12px;margin:0 auto 14px;width:max-content;max-width:100%;padding:10px 26px;border-radius:40px;background:var(--paper);border:1px solid var(--line);}
 .pillbrand b{letter-spacing:.3em;font-size:.95rem;color:var(--gold)}.pillbrand small{letter-spacing:.22em;font-size:.65rem;color:var(--gold2)}
 .greet{font-size:1.5rem;direction:rtl;color:var(--gold);margin:6px 0 0;font-family:'Playfair Display',serif}
 .welcome{letter-spacing:.28em;font-size:.78rem;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:12px;justify-content:center;margin-top:6px}
@@ -29,7 +28,7 @@ body{margin:0;font:16px/1.5 Poppins,system-ui,sans-serif;color:var(--ink);min-he
 .blurb{background:var(--paper);border:1px solid var(--line);border-radius:28px;padding:14px 18px;font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:18px}
 .hero{border-radius:38px;overflow:hidden;border:2px solid var(--gold2);margin-bottom:18px;aspect-ratio:4/4.6;background:var(--line)}
 .hero img{width:100%;height:100%;object-fit:cover;display:block}
-.btn{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:12px;padding:10px 20px 10px 10px;border-radius:44px;background:var(--paper);border:1px solid var(--line);color:var(--gold);font:600 1rem 'Playfair Display',serif;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 6px 18px #a8823f1a}
+.btn{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:12px;padding:10px 20px 10px 10px;border-radius:44px;background:var(--paper);border:1px solid var(--line);color:var(--gold);font:600 .98rem Poppins;text-decoration:none;}
 .btn .ic{width:54px;height:54px;border-radius:16px;background:#f6e9cf;border:1px solid var(--gold2);display:grid;place-items:center;font-size:1.6rem}
 .btn span:nth-child(2){flex:1;text-align:center}.btn::after{content:"›";font-size:1.8rem;font-weight:400}
 .btn.dark{background:linear-gradient(#2a2118,#15100a);color:#fff;border-color:var(--gold)}
@@ -43,7 +42,7 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .story{flex:none;width:86px;text-align:center;font:600 .6rem Poppins;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;color:var(--ink);cursor:pointer}
 .story .ring{position:relative;width:82px;height:82px;border-radius:50%;background:#1d1710;border:3px solid var(--gold2);display:grid;place-items:center;font-size:2rem;margin-bottom:6px}
 .story.on .ring{box-shadow:0 0 0 3px var(--cream),0 0 0 6px var(--gold)}
-.story i{position:absolute;right:-4px;bottom:-4px;width:26px;height:26px;border-radius:50%;background:var(--gold2);color:#1d1710;font:700 1rem/26px Poppins;font-style:normal;border:2px solid var(--cream)}
+.story i{position:absolute;right:-4px;bottom:-4px;width:26px;height:26px;border-radius:50%;background:var(--gold2);color:#1d1710;font:700 1rem/26px Poppins;font-style:normal;border:2px solid var(--paper)}
 .story em{display:block;font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tabs{display:flex;gap:8px;overflow-x:auto;margin:0 -20px 14px;padding:2px 20px;scrollbar-width:none}
 .chip{flex:none;padding:10px 20px;border-radius:30px;border:1px solid var(--line);background:var(--paper);font:600 .78rem Poppins;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);cursor:pointer}
@@ -53,9 +52,6 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .fbar button{flex:none;border:0;border-radius:15px;background:var(--gold2);color:#1d1710;padding:0 14px;min-height:38px;font:600 .78rem Poppins;cursor:pointer}
 #lbMoment{justify-content:center;max-width:440px}
 
-/* ---------- album: light tiles ----------
-   A square picture with just a small heart on it, and the name underneath. Save / Delete / Change moment live in the
-   full-screen view (tap any tile), so the grid stays calm. A toggle switches to a denser 3-column grid. */
 .gbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;font-size:.78rem;color:var(--soft)}
 .seg{display:flex;gap:2px;background:#f2e3c6;border-radius:13px;padding:3px}
 .seg button{width:40px;height:32px;border:0;border-radius:10px;background:none;color:var(--soft);display:grid;place-items:center;cursor:pointer}
@@ -73,19 +69,18 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .mb{position:absolute;top:8px;left:8px;z-index:1;padding:1px 8px;border-radius:10px;background:#000a;color:#fff;font:600 .55rem/1.7 Poppins;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}
 .dense .mb{top:5px;left:5px;padding:0 6px;font-size:.5rem}
 .ov{display:none}
-.dense .ov{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;padding:18px 40px 6px 7px;background:linear-gradient(transparent,#000b);color:#fff;font:600 .62rem Poppins;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.dense .ov{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;padding:18px 40px 6px 7px;background:linear-gradient(transparent,#000b);color:#fff;font:600 .62rem Poppins;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cap{padding:7px 4px 0}
 .dense .cap{display:none}
 .who{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;font:600 .8rem/1.3 Poppins;color:var(--ink)}
 .who .ty{margin-right:5px}
-.like{position:absolute;right:8px;bottom:8px;z-index:2;display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px;border:0;border-radius:15px;background:#fffaf2ea;color:var(--soft);font:600 .76rem Poppins;cursor:pointer;box-shadow:0 1px 6px #0003}
+.like{position:absolute;right:8px;bottom:8px;z-index:2;display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px;border:0;border-radius:15px;background:#fffaf2ea;color:var(--soft);;font:600 .72rem Poppins;cursor:pointer}
 .like::after{content:"";position:absolute;inset:-7px}
 .like .i{width:16px;height:16px}
 .like.on{background:#fde6ea;color:var(--heart)}.like.on .i{fill:currentColor}
 .dense .like{right:5px;bottom:5px;height:24px;padding:0 7px;gap:3px;font-size:.66rem}.dense .like .i{width:12px;height:12px}
 .like.pop .i{animation:pop .35s}
 @keyframes pop{40%{transform:scale(1.45)}}
-/* notes */
 .media.note{background:linear-gradient(#fffdf8,#fbf1e1);color:var(--ink);box-shadow:0 4px 14px #a8823f26,inset 0 0 0 1px var(--line)}
 .card.wide .media.note{aspect-ratio:auto;min-height:120px}
 .nt{display:flex;flex-direction:column;width:100%;height:100%;min-height:inherit;padding:10px 12px 42px;text-align:left;background:none;border:0;font:inherit;color:inherit;cursor:pointer}
@@ -95,21 +90,19 @@ h3{font:700 1.3rem 'Playfair Display',serif;margin:18px 0 10px}
 .nt .more{margin-top:auto;padding-top:6px;font:600 .6rem Poppins;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .dense .nt{padding:7px 8px 30px}.dense .nt .q{font-size:1.6rem;height:14px}.dense .nt-t{font-size:.7rem;-webkit-line-clamp:5}.dense .nt .more{display:none}
 .dense .card.wide .nt-t{font-size:.9rem}
-/* voice */
-.vo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-bottom:20px;background:radial-gradient(120% 90% at 50% 0,#4a3720,#17110a);color:#f6e9cf;cursor:pointer}
+.vo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-bottom:20px;background:radial-gradient(120% 90% at 50% 0,#4a3720,#17110a)}
 .vplay{width:54px;height:54px;padding:0;border-radius:50%;border:2px solid var(--gold2);background:#ffffff14;color:#fff;display:grid;place-items:center;cursor:pointer}
 .vplay .i{width:22px;height:22px}
 .vplay .pa{display:none}.vo.playing .vplay .pl{display:none}.vo.playing .vplay .pa{display:block}
 .eq{display:flex;gap:3px;align-items:center;height:20px}
 .eq i{display:block;width:3px;border-radius:2px;background:var(--gold2)}
-.eq i:nth-child(1){height:30%}.eq i:nth-child(2){height:60%}.eq i:nth-child(3){height:100%}.eq i:nth-child(4){height:55%}.eq i:nth-child(5){height:80%}.eq i:nth-child(6){height:40%}.eq i:nth-child(7){height:25%}
+.eq i:nth-child(1){height:30%}.eq i:nth-child(2){height:60%}.eq i:nth-child(3){height:100%}.eq i:nth-child(4){height:55%}.eq i:nth-child(5){height:80%}.eq i:nth-child(6){height:40%}.eq i:nth-child(7){height:70%}.eq i:nth-child(8){height:50%}
 .vo.playing .eq i{animation:eq 1s ease-in-out infinite}
 .vo.playing .eq i:nth-child(2n){animation-delay:.2s}.vo.playing .eq i:nth-child(3n){animation-delay:.4s}
 @keyframes eq{50%{height:100%}}
 .vt{font:500 .72rem Poppins;letter-spacing:.05em}
 .vo .pg{position:absolute;left:0;right:0;bottom:0;height:4px;background:#ffffff22}.vo .pg i{display:block;height:100%;width:0;background:var(--gold2)}
 .dense .vplay{width:40px;height:40px}.dense .vplay .i{width:17px;height:17px}.dense .eq,.dense .vt{display:none}.dense .vo{padding-bottom:0}
-/* private-album notice + empty state */
 .notice{background:var(--paper);border:1px dashed var(--gold2);border-radius:18px;padding:12px 16px;font-size:.85rem;color:var(--soft);margin-bottom:14px}
 .empty{grid-column:1/-1;text-align:center;color:var(--soft);padding:40px 10px}
 
@@ -117,7 +110,7 @@ label.f{display:block;font-size:.85rem;color:var(--soft);margin:14px 0 6px}
 input.nm,textarea{width:100%;font:inherit;padding:13px 16px;border-radius:16px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
 textarea{min-height:150px;resize:vertical}
 .chips{display:flex;flex-wrap:wrap;gap:8px}.chips .chip{padding:9px 12px;font-size:.66rem;letter-spacing:.07em}
-.big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;padding:20px;border-radius:22px;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;font:600 1.1rem Poppins;cursor:pointer;position:relative}
+.big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;padding:20px;border-radius:22px;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;text-decoration:none;font:600 1rem Poppins;cursor:pointer}
 .big-btn.alt{background:var(--paper);color:var(--gold);border:1px solid var(--gold2)}
 .big-btn.danger{background:linear-gradient(#b8443a,#97312a)}
 .big-btn:disabled{opacity:.55;cursor:default}
@@ -133,18 +126,17 @@ textarea{min-height:150px;resize:vertical}
 .upthumbs .done::after{content:"✓";background:var(--ok)}.upthumbs .fail::after{content:"!";background:var(--err)}
 .msg a{color:var(--gold)}
 
-/* ---------- voice ---------- */
 .stage{position:relative;width:164px;height:164px;margin:16px auto 4px}
 .stage .rg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
 .rg circle{fill:none;stroke-width:5}.rg .trk{stroke:var(--line)}.rg .fg{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
-.rec{position:absolute;inset:14px;padding:0;border-radius:50%;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px #1d171040}
+.rec{position:absolute;inset:14px;padding:0;border-radius:50%;border:0;background:linear-gradient(#2a2118,#15100a);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px #a8823f33}
 .rec .i{width:48px;height:48px}
 .rec .cdn{font:700 3.4rem/1 'Playfair Display',serif}
 .rec.live{background:#b32d3d;animation:pulse 1.2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 16px #b32d3d33}}
 @media (prefers-reduced-motion:reduce){.rec.live,.vo.playing .eq i,.like.pop .i{animation:none}.rg .fg,.bar i{transition:none}}
 .timer{font:600 1.6rem 'Playfair Display',serif;text-align:center}.timer small{font:400 .85rem Poppins;color:var(--soft)}
-.linkbtn{display:block;position:relative;margin:14px auto 0;width:max-content;max-width:100%;background:none;border:0;padding:8px 14px;color:var(--gold);font:600 .85rem Poppins;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:center}
+.linkbtn{display:block;position:relative;margin:14px auto 0;width:max-content;max-width:100%;background:none;border:0;padding:8px 14px;color:var(--gold);font:600 .85rem Poppins;text-decoration:underline}
 .linkbtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:16px 18px;margin-top:16px}
 .panel h4{margin:0 0 4px;font:700 1.15rem 'Playfair Display',serif}
@@ -157,24 +149,22 @@ textarea{min-height:150px;resize:vertical}
 .two .big-btn{margin-top:14px;padding:16px 10px;font-size:1rem}
 .done-ic{width:60px;height:60px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin:4px auto 10px}.done-ic .i{width:30px;height:30px;stroke-width:3}
 
-nav{position:fixed;left:0;right:0;bottom:0;display:none;justify-content:space-around;align-items:flex-end;background:var(--paper);border-radius:28px 28px 0 0;box-shadow:0 -6px 24px #a8823f26;padding:10px 6px calc(10px + env(safe-area-inset-bottom));z-index:5}
+nav{position:fixed;left:0;right:0;bottom:0;display:none;justify-content:space-around;align-items:flex-end;background:var(--paper);border-radius:28px 28px 0 0;box-shadow:0 -6px 24px #a8823f26;padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:25}
 nav a{flex:1;text-align:center;text-decoration:none;color:var(--soft);font-size:.72rem;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav a span{font-size:1.5rem;line-height:1.3}nav a.on{color:var(--gold);font-weight:600}
-nav a.cam span{position:relative;width:68px;height:68px;border-radius:50%;background:#1d1710;border:4px solid var(--paper);display:grid;place-items:center;margin-top:-34px;font-size:1.7rem;box-shadow:0 6px 16px #0004}
-/* friendly "add yours" glow: ripples a few times, then rests as a soft halo; gone once this phone has contributed */
+nav a.cam span{position:relative;width:68px;height:68px;border-radius:50%;background:#1d1710;border:4px solid var(--paper);display:grid;place-items:center;margin-top:-34px;font-size:1.7rem;box-shadow:0 12px 22px #251d16aa}
 nav a.cam.glow{color:var(--gold);font-weight:600}
 nav a.cam.glow span{box-shadow:0 0 0 3px #d9bd8066,0 0 18px 4px #d9bd8099,0 6px 16px #0004}
-nav a.cam.glow span::before,nav a.cam.glow span::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--gold2);opacity:0;pointer-events:none;animation:ripple 2.6s ease-out 5}
+nav a.cam.glow span::before,nav a.cam.glow span::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--gold2);opacity:0;pointer-events:none;animation:ripple 2.6s infinite}
 nav a.cam.glow span::after{animation-delay:1.3s}
 @keyframes ripple{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.6);opacity:0}}
-.invite{display:flex;align-items:center;gap:12px;margin:0 0 4px;padding:9px 14px 9px 9px;border-radius:22px;background:linear-gradient(#2a2118,#15100a);color:#fff;text-decoration:none;box-shadow:0 6px 18px #a8823f33;animation:halo 2.6s ease-out 5}
+.invite{display:flex;align-items:center;gap:12px;margin:0 0 4px;padding:9px 14px 9px 9px;border-radius:22px;background:linear-gradient(#2a2118,#15100a);color:#fff;text-decoration:none;box-shadow:0 10px 26px #1d1710bb}
 .invite[hidden]{display:none}
 .invite .ii{width:42px;height:42px;border-radius:13px;background:#f6e9cf;display:grid;place-items:center;font-size:1.3rem;flex:none}
 .invite b{display:block;font:600 .95rem/1.25 Poppins}.invite small{display:block;color:#d9c9a7;font-size:.75rem;line-height:1.3}
 .invite .go{margin-left:auto;font-size:1.7rem;line-height:1;color:var(--gold2)}
 @keyframes halo{0%{box-shadow:0 0 0 0 #d9bd80aa,0 6px 18px #a8823f33}100%{box-shadow:0 0 0 14px #d9bd8000,0 6px 18px #a8823f33}}
 @media (prefers-reduced-motion:reduce){nav a.cam.glow span::before,nav a.cam.glow span::after,.invite{animation:none}nav a.cam.glow span::before{opacity:.7;transform:scale(1.2)}}
-/* how-to page */
 .how{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .how li{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:10px 14px}
 .hi{width:46px;height:46px;flex:none;border-radius:14px;background:#f6e9cf;border:1px solid var(--gold2);display:grid;place-items:center;font-size:1.4rem}
@@ -188,7 +178,6 @@ nav a.cam.glow span::after{animation-delay:1.3s}
 .oops .big-btn{background:var(--gold2);color:#1d1710;margin-top:18px;text-decoration:none}
 .oops .hint{color:#d9c9a7}
 
-/* lightbox, delete sheet, toast */
 #lb{position:fixed;inset:0;background:#000e;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;padding:20px}
 #lb.on{display:flex}#lb img,#lb video{max-width:100%;max-height:78dvh;border-radius:14px}
 #lb .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
@@ -199,26 +188,39 @@ nav a.cam.glow span::after{animation-delay:1.3s}
 .note-full p{margin:10px 0 14px;font:italic 400 1.2rem/1.5 'Playfair Display',serif;white-space:pre-wrap;overflow-wrap:anywhere}
 .vofull{text-align:center;min-width:260px}.vofull .big{font-size:2.6rem;line-height:1.2}.vofull audio{width:100%;margin-top:10px}
 .lbcap{margin:0;color:#fff;font:500 .9rem Poppins;opacity:.92;text-align:center}
-#sheet,#up{position:fixed;inset:0;z-index:30;background:#0007;display:flex;align-items:flex-end;justify-content:center}
+#sheet,#up,#singleEdit{position:fixed;inset:0;z-index:30;background:#0007;display:flex;align-items:flex-end;justify-content:center}
 #up{z-index:28}
+#singleEdit{z-index:31;background:#0009}
 .sheet{width:100%;max-width:480px;background:var(--paper);border-radius:28px 28px 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease-out}
 @keyframes up{from{transform:translateY(40px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.sheet{animation:none}}
 .sheet h4{margin:0 0 4px;font:700 1.25rem 'Playfair Display',serif}.sheet p{margin:0;color:var(--soft);font-size:.9rem}
 .sheet .two{grid-template-columns:1fr 1fr}
 .sheet.up{position:relative;text-align:center}
-.sheet.up h4{font-size:1.2rem}
 .upx{position:absolute;top:12px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:#f8ecd6;color:var(--ink);font-size:1.05rem;cursor:pointer}
 .upq{margin:14px 0 4px;font:700 1.15rem 'Playfair Display',serif}.upq small{display:block;font:400 .78rem Poppins;color:var(--soft);margin-top:2px}
 .moms{display:flex;gap:6px 8px;justify-content:center;flex-wrap:wrap;margin:8px 0 2px}
 .mom{width:78px;background:none;border:0;padding:4px 0;color:var(--ink);cursor:pointer;text-align:center;font:600 .6rem/1.25 Poppins;letter-spacing:.06em;text-transform:uppercase}
-.mom .ring{position:relative;width:62px;height:62px;border-radius:50%;background:#1d1710;border:3px solid var(--gold2);display:grid;place-items:center;font-size:1.7rem;margin:0 auto 6px;transition:transform .15s}
+.mom .ring{position:relative;width:62px;height:62px;border-radius:50%;background:#1d1710;border:3px solid var(--gold2);display:grid;place-items:center;font-size:1.7rem;margin:0 auto 6px;transition:transform .2s ease}
 .mom.on .ring{box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--gold);transform:scale(1.07)}
-.mom.on .ring::after{content:"✓";position:absolute;right:-7px;bottom:-5px;width:24px;height:24px;border-radius:50%;background:var(--ok);color:#fff;font:700 .85rem/24px Poppins;text-align:center;border:2px solid var(--paper)}
+.mom.on .ring::after{content:"✓";position:absolute;right:-7px;bottom:-5px;width:24px;height:24px;border-radius:50%;background:var(--ok);color:#fff;font:700 .85rem/24px Poppins;text-align:center;box-shadow:0 2px 8px #0002}
 .mom em{display:block;font-style:normal;overflow-wrap:anywhere}
 .sheet.up .hint{min-height:1.4em;margin:6px 0 0;color:var(--ok);font-weight:600}
 @media (prefers-reduced-motion:reduce){.mom .ring{transition:none}}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom));background:#1d1710;color:#fff;padding:12px 18px;border-radius:24px;z-index:40;font-size:.9rem;max-width:90vw;text-align:center;box-shadow:0 8px 24px #0005}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom));background:#1d1710;color:#fff;padding:12px 18px;border-radius:24px;z-index:40;font-size:.82rem;box-shadow:0 12px 24px #0004}
+
+.single-editor{max-width:480px;background:var(--paper);border-radius:28px 28px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));overflow:auto;max-height:92dvh}
+.single-editor h4{margin:0 0 10px;font:700 1.2rem 'Playfair Display',serif;text-align:center}
+.editor-preview{background:linear-gradient(#fdfaf5,#f5ead4);border-radius:20px;border:1px solid var(--line);padding:10px;display:flex;align-items:center;justify-content:center;min-height:260px}
+#editCanvas{display:block;width:100%;max-height:54dvh;border-radius:16px;background:#f3ebdd;object-fit:contain}
+.preset-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px}
+.preset{border:1px solid var(--line);background:var(--paper);color:var(--soft);padding:8px 12px;border-radius:999px;font:600 .72rem Poppins;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.preset.on{background:#1d1710;color:#fff;border-color:#1d1710}
+.slider-grid{display:grid;gap:10px;margin:12px 0 4px}
+.slider-row{display:grid;grid-template-columns:74px 1fr 40px;align-items:center;gap:8px;font-size:.72rem;color:var(--soft)}
+.slider-row input[type="range"]{width:100%}
+.slider-row b{font-weight:600;color:var(--ink)}
+.single-editor .two{margin-top:8px}
 </style>
 </head>
 <body>
@@ -251,7 +253,7 @@ nav a.cam.glow span::after{animation-delay:1.3s}
 </section>
 
 <section class="view" id="v-album">
-  <div class="top"><a class="sq" href="#help" aria-label="How to" style="font-weight:700;font-family:Playfair Display,serif">?</a><h2 class="t-title">Memories<small>CAPTURE. CHERISH. FOREVER.</small></h2><button class="sq" id="refresh" aria-label="Refresh">⟳</button></div>
+  <div class="top"><a class="sq" href="#help" aria-label="How to" style="font-weight:700;font-family:Playfair Display,serif">?</a><h2 class="t-title">Memories<small>CAPTURE. CHERISH. FOREVER.</small></h2><span style="width:46px"></span></div>
   <a class="invite" id="invite" href="#capture" hidden><span class="ii" aria-hidden="true">📸</span><span><b>Add your photos</b><small>Share your view of the day</small></span><span class="go" aria-hidden="true">›</span></a>
   <h3>Guest Stories</h3>
   <div class="stories" id="stories"></div>
@@ -299,7 +301,6 @@ nav a.cam.glow span::after{animation-delay:1.3s}
   <div class="top"><a class="sq" href="#album" aria-label="Back">←</a><h2>Voice<small>LEAVE A SPOKEN WISH</small></h2><span style="width:46px"></span></div>
   <label class="f">Your name (optional)</label><input class="nm" maxlength="40" autocomplete="given-name">
 
-  <!-- Each block below is shown only in the states listed in data-s (see vState in the script) -->
   <div data-s="idle asking countdown recording">
     <div class="stage">
       <svg class="rg" viewBox="0 0 164 164" aria-hidden="true"><circle class="trk" cx="82" cy="82" r="77"/><circle class="fg" id="rfg" cx="82" cy="82" r="77"/></svg>
@@ -379,6 +380,28 @@ nav a.cam.glow span::after{animation-delay:1.3s}
   <button class="big-btn alt" id="upRetry" type="button" hidden>Try the failed ones again</button>
   <button class="big-btn" id="upDone" type="button" disabled>Uploading…</button>
 </div></div>
+<div id="singleEdit" hidden role="dialog" aria-modal="true" aria-labelledby="editTitle">
+  <div class="single-editor">
+    <button class="upx" id="editX" type="button" aria-label="Cancel">✕</button>
+    <h4 id="editTitle">Customize this photo</h4>
+    <div class="editor-preview"><canvas id="editCanvas" width="900" height="900"></canvas></div>
+    <div class="preset-row">
+      <button class="preset on" type="button" data-preset="original">Original</button>
+      <button class="preset" type="button" data-preset="warm">Warm</button>
+      <button class="preset" type="button" data-preset="soft">Soft</button>
+      <button class="preset" type="button" data-preset="crisp">Crisp</button>
+      <button class="preset" type="button" data-preset="noir">Noir</button>
+    </div>
+    <div class="slider-grid">
+      <div class="slider-row"><b>Light</b><input class="edit-slider" data-key="brightness" type="range" min="70" max="140" value="100"><span id="brightnessValue">100%</span></div>
+      <div class="slider-row"><b>Contrast</b><input class="edit-slider" data-key="contrast" type="range" min="80" max="160" value="100"><span id="contrastValue">100%</span></div>
+      <div class="slider-row"><b>Color</b><input class="edit-slider" data-key="saturation" type="range" min="60" max="180" value="100"><span id="saturationValue">100%</span></div>
+      <div class="slider-row"><b>Warmth</b><input class="edit-slider" data-key="warmth" type="range" min="0" max="60" value="0"><span id="warmthValue">0</span></div>
+      <div class="slider-row"><b>Vignette</b><input class="edit-slider" data-key="vignette" type="range" min="0" max="50" value="0"><span id="vignetteValue">0</span></div>
+    </div>
+    <div class="two"><button class="big-btn alt" id="editCancel" type="button">Use original</button><button class="big-btn" id="editSave" type="button">Use this photo</button></div>
+  </div>
+</div>
 <div id="toast" role="status" hidden></div>
 
 <script>
@@ -395,7 +418,6 @@ const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 
 $$('.nm').forEach(i=>{i.value=ls.get('guestName')||'';i.oninput=()=>{ls.set('guestName',i.value);$$('.nm').forEach(o=>o.value=i.value)}});
 
-// The config request also hands this phone its "device signature" cookie, so uploads wait for it.
 const ready=fetch('/api/config').then(r=>r.json()).then(c=>{
   cfg=c;document.title=c.title;
   $('#names').textContent=c.title;
@@ -404,13 +426,13 @@ const ready=fetch('/api/config').then(r=>r.json()).then(c=>{
   $('#date').textContent=c.date?'📅 '+c.date:'';$('#venue').textContent=c.venue?'📍 '+c.venue:'';
   $('#blurb').innerHTML=esc(c.blurb).replace(/\n/g,'<br>');
   $$('.t-title').forEach(e=>e.firstChild.textContent=c.brand||c.title);
-  $('#stories').innerHTML='<button class="story on" data-cat=""><div class="ring">✨</div><em>Everything</em></button>'+c.stories.map(s=>`<button class="story" data-cat="${esc(s)}"><div class="ring">${esc(emo(s))}<i data-add="${esc(s)}">+</i></div><em>${esc(lbl(s))}</em></button>`).join('');
+  $('#stories').innerHTML='<button class="story on" data-cat=""><div class="ring">✨</div><em>Everything</em></button>'+c.stories.map(s=>`<button class="story" data-cat="${esc(s)}"><div class="ring">${esc(emo(s))}</div><em>${esc(lbl(s))}</em></button>`).join('');
   $('#capChips').innerHTML=c.stories.map(s=>`<button class="mom" data-cap="${esc(s)}" type="button"><span class="ring">${esc(emo(s))}</span><em>${esc(lbl(s))}</em></button>`).join('');
   drawTabs();
 }).catch(()=>{});
 
 function route(){
-  const v=location.hash.slice(1)||'album';          // the album is the first page
+  const v=location.hash.slice(1)||'album';
   $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
   $('nav').style.display=v==='home'?'none':'flex';
   $$('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));
@@ -421,10 +443,8 @@ function route(){
 }
 addEventListener('hashchange',route);
 
-// ----- album -----
 const sigOf=a=>JSON.stringify(a.map(i=>[i.id,i.likes,!!i.mine,i.cat]));
 const typeOk=i=>ftype==='all'||(ftype==='mine'?i.mine:i.type===ftype);
-// Tells the guest which moment is selected and how to leave it, so nothing looks "missing".
 function drawFbar(){
   const b=$('#fbar');b.hidden=!fcat;if(!fcat)return;
   const n=items.filter(i=>typeOk(i)&&i.cat===fcat).length;
@@ -433,12 +453,12 @@ function drawFbar(){
 async function loadFeed(){
   try{
     let r=await fetch('/api/feed');
-    priv=r.status===403;                       // album closed to guests: still show their own uploads
+    priv=r.status===403;
     if(priv)r=await fetch('/api/mine');
     if(!r.ok)throw 0;
     items=await r.json();
     fixFilter();$('#privNote').hidden=!priv;drawTabs();
-    const s=sigOf(items);if(s!==lastSig||!$('#grid').children.length){lastSig=s;drawFeed()}   // skip identical refreshes: keeps scroll, audio and images steady
+    const s=sigOf(items);if(s!==lastSig||!$('#grid').children.length){lastSig=s;drawFeed()}
   }catch{if(!items.length)$('#grid').innerHTML='<p class="empty">The album isn\'t available right now.</p>'}
 }
 function fixFilter(){if(ftype==='mine'&&!items.some(i=>i.mine))ftype='all'}
@@ -454,24 +474,21 @@ function card(i){
   let m;
   if(i.type==='photo')m=`<img loading="lazy" src="/thumb/${i.id}" data-open="${i.id}" alt="Photo by ${who}">`;
   else if(i.type==='video')m=`<video src="/media/${i.id}#t=0.1" preload="metadata" muted playsinline data-open="${i.id}"></video><span class="pb">${ic('play','fill')}</span>`;
-  else if(i.type==='voice')m=`<div class="vo" data-open="${i.id}" data-dur="${i.dur||0}"><button class="vplay" data-play type="button" aria-label="Play voice message from ${who}">${ic('play','fill pl')}${ic('pause','fill pa')}</button><div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vt">${i.dur?fmt(i.dur):'Voice'}</span><div class="pg"><i></i></div><audio preload="none" src="/media/${i.id}"></audio></div>`;
-  else m=`<button class="nt" data-open="${i.id}" type="button" aria-label="Read note from ${who}"><span class="q" aria-hidden="true">“</span><span class="nt-t">${esc(i.text)}</span>${i.text.length>(wide?190:70)?'<span class="more">Read more</span>':''}</button>`;
-  return `<article class="card ${wide?'wide':''}" aria-label="${kind} from ${who}"><div class="media ${i.type==='note'?'note':''}">${m}${i.mine?'<span class="mb">Mine</span>':''}<span class="ov" aria-hidden="true">${em} ${who}</span>
-  <button class="like ${on?'on':''}" data-like="${i.id}" type="button" aria-pressed="${on}" aria-label="Like">${ic('heart')}<span>${i.likes}</span></button></div>
-  <div class="cap"><b class="who" title="${who}"><span class="ty" aria-hidden="true">${em}</span>${who}</b></div></article>`;
+  else if(i.type==='voice')m=`<div class="vo" data-open="${i.id}" data-dur="${i.dur||0}"><button class="vplay" data-play type="button" aria-label="Play voice message from ${who}">${ic('play','fill')}</button><div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="vt">Voice</div><span class="pg"><i></i></span></div>`;
+  else m=`<button class="nt" data-open="${i.id}" type="button" aria-label="Read note from ${who}"><span class="q" aria-hidden="true">“</span><span class="nt-t">${esc(i.text)}</span><span class="more">Read more</span></button>`;
+  return `<article class="card ${wide?'wide':''}" aria-label="${kind} from ${who}"><div class="media ${i.type==='note'?'note':''}">${m}${i.mine?'<span class="mb">Mine</span>':''}<span class="ov" aria-hidden="true">${esc(i.cat||'Anywhere')}</span><button class="like ${on?'on':''}" data-like="${i.id}" type="button" aria-pressed="${on}" aria-label="Like">${ic('heart')}<span>${i.likes}</span></button></div><div class="cap"><b class="who" title="${who}"><span class="ty" aria-hidden="true">${em}</span>${who}</b></div></article>`;
 }
 function drawFeed(){
   cur=null;drawFbar();
   const l=items.filter(i=>typeOk(i)&&(!fcat||i.cat===fcat));
   $('#gcount').textContent=l.length+(l.length===1?' memory':' memories');
-  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':fcat?`Nothing in ${esc(fcat)} yet. Tap + on it above to add the first one.`:'Nothing here yet. Tap the 📸 button below to add the first memory.'}</p>`;
+  $('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${ftype==='mine'?'You haven\'t added anything yet.':fcat?`Nothing in ${esc(fcat)} yet. Tap + on it above to add the first one.`:'No memories yet.'}</p>`;
 }
 function paintLike(id){
   const it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
   $$(`[data-like="${id}"]`).forEach(b=>{b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.querySelector('span').textContent=it.likes;
     if(on){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}});
 }
-// voice tiles in the album: one player at a time
 document.addEventListener('play',e=>{if(!e.target.matches('.vo audio'))return;if(cur&&cur!==e.target)cur.pause();cur=e.target;e.target.closest('.vo').classList.add('playing')},true);
 ['pause','ended'].forEach(ev=>document.addEventListener(ev,e=>{if(!e.target.matches('.vo audio'))return;const v=e.target.closest('.vo');v.classList.remove('playing');if(cur===e.target)cur=null;
   if(ev==='ended'){v.querySelector('.pg i').style.width='0';v.querySelector('.vt').textContent=+v.dataset.dur?fmt(+v.dataset.dur):'Voice'}},true));
@@ -497,12 +514,12 @@ async function doDelete(){
 }
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],[data-dens],#refresh,#lbX,#lb,#shNo,#shYes,#sheet,#upX,#upDone,#upRetry');
+  const t=e.target.closest('[data-add],[data-cat],[data-type],[data-cap],[data-clearpreset],[data-lbcap],[data-like],[data-open],[data-del],[data-play],[data-mine],[data-dens],[data-preset],#refresh,#lbX,#lb,#sheet,#shYes,#shNo,#upX,#upDone,#upRetry,#editX,#editCancel,#editSave');
   if(!t)return;
   if(t.dataset.add!==undefined){capPreset=capCat=t.dataset.add;syncCap();drawPreset();location.hash='#capture';return}
-  if(t.dataset.mine!==undefined){ftype='mine';return}                  // link continues to #album
+  if(t.dataset.mine!==undefined){ftype='mine';return}
   if(t.dataset.cat!==undefined){
-    const c=t.dataset.cat;fcat=!c||fcat===c?'':c;                       // "Everything" (or tapping the active moment again) clears the filter
+    const c=t.dataset.cat;fcat=!c||fcat===c?'':c;
     $$('.story').forEach(s=>s.classList.toggle('on',s.dataset.cat===fcat));drawFeed();
   }
   else if(t.dataset.clearpreset!==undefined){capPreset=capCat='';syncCap();drawPreset()}
@@ -512,7 +529,7 @@ document.addEventListener('click',async e=>{
     else toast('Couldn\'t change it. Please try again.');
   }
   else if(t.dataset.type){ftype=t.dataset.type;drawTabs();drawFeed()}
-  else if(t.dataset.cap!==undefined){capCat=capCat===t.dataset.cap?'':t.dataset.cap;syncCap();applyCat()}   // tap again to un-select
+  else if(t.dataset.cap!==undefined){capCat=capCat===t.dataset.cap?'':t.dataset.cap;syncCap();applyCat()}
   else if(t.dataset.like){
     const id=t.dataset.like,it=items.find(x=>x.id===id),on=liked.has(id);if(!it)return;
     on?liked.delete(id):liked.add(id);ls.set('liked',JSON.stringify([...liked]));
@@ -533,8 +550,8 @@ document.addEventListener('click',async e=>{
     $('#lbCap').textContent=`${(KIND[it.type]||KIND.photo)[0]} ${it.name||'A guest'} · ${when}`;
     $('#lbDl').hidden=it.type==='note';$('#lbDl').href=`/media/${it.id}?dl=1`;
     const d=$('#lbDel');d.hidden=!it.mine;d.dataset.del=it.id;
-    const mm=$('#lbMoment');mm.hidden=!(it.mine&&(it.type==='photo'||it.type==='video')&&cfg.stories.length);   // own photos/videos: change the moment
-    if(!mm.hidden)mm.innerHTML=['Anywhere',...cfg.stories].map((s,i)=>`<button class="chip ${(i?s:'')===(it.cat||'')?'on':''}" data-lbcap="${i?esc(s):''}" data-id="${it.id}" type="button">${esc(s)}</button>`).join('');
+    const mm=$('#lbMoment');mm.hidden=!(it.mine&&(it.type==='photo'||it.type==='video')&&cfg.stories.length);
+    if(!mm.hidden)mm.innerHTML=['Anywhere',...cfg.stories].map((s,i)=>`<button class="chip ${(i?s:'')===(it.cat||'')?'on':''}" data-lbcap="${i?esc(s):''}" data-id="${it.id}" type="button">${esc(s||'Anywhere')}</button>`).join('');
     $('#lb').classList.add('on');
   }
   else if(t.dataset.del)askDelete(t.dataset.del);
@@ -545,15 +562,14 @@ document.addEventListener('click',async e=>{
   else if(t.id==='upRetry'){const f=upFailed;upFailed=[];uploadFiles(f)}
   else if(t.id==='refresh')loadFeed();
   else if(t.id==='lbX'||(t.id==='lb'&&e.target===t))closeLb();
+  else if(t.dataset.preset){applyPreset(t.dataset.preset)}
+  else if(t.id==='editX'||t.id==='editCancel'){skipSingleEdit()}
+  else if(t.id==='editSave'){saveSingleEditedPhoto()}
 });
-addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#sheet').hidden)closeSheet();else closeLb()});
+addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#sheet').hidden)closeSheet();else if(!$('#singleEdit').hidden)skipSingleEdit();else closeLb()});
 setInterval(()=>{if(location.hash==='#album'&&document.visibilityState==='visible'&&!$('#lb').classList.contains('on')&&$('#sheet').hidden&&!(cur&&!cur.paused))loadFeed()},30000);
 const syncCap=()=>$$('#capChips .mom').forEach(c=>{const on=!!capCat&&c.dataset.cap===capCat;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on)});
 
-// ----- upload -----
-// Uploading starts the moment files are picked. A bottom sheet pops up right away (nothing to scroll to) showing
-// ONLY this batch, with one-tap moment buttons that apply to the whole batch. Already-uploaded files are updated;
-// queued ones just use the new tag. Skipping is fine: it stays "Anywhere".
 async function send(file,cat,onP,extra){
   await ready;
   return new Promise(res=>{
@@ -575,23 +591,24 @@ async function tagItem(id,cat){
 }
 let upTimer=0,upFailed=[];
 const closeUp=()=>{clearTimeout(upTimer);$('#up').hidden=true};
-async function applyCat(){                       // a moment tile was tapped (or untapped)
+async function applyCat(){
   const b=batch;if(!b)return;
   clearTimeout(upTimer);
-  b.cat=capCat;                                  // files not uploaded yet will be sent with this tag
-  const todo=b.done.filter(d=>d.cat!==capCat);   // files already uploaded get updated
+  b.cat=capCat;
+  const todo=b.done.filter(d=>d.cat!==capCat);
   const ok=(await Promise.all(todo.map(async d=>{const k=await tagItem(d.id,capCat);if(k)d.cat=capCat;return k}))).every(Boolean);
   $('#tagMsg').textContent=ok?(capCat?`✓ Saved to ${capCat}`:'Saved to Anywhere'):'Couldn\'t update some of them. Tap again to retry.';
-  if(ok&&b.finished&&capCat&&batch===b)upTimer=setTimeout(closeUp,1400);   // all done and tagged: get out of the way
+  if(ok&&b.finished&&capCat&&batch===b)upTimer=setTimeout(closeUp,1400);
 }
 async function uploadFiles(list){
   if(!list.length)return;
   const n=list.length;
-  capCat=capPreset;syncCap();                    // each batch starts from the "+" moment the guest came from, else nothing selected
+  capCat=capPreset;syncCap();
   const b=batch={cat:capCat,done:[],finished:false};
-  // sheet: reset to show only this batch
   clearTimeout(upTimer);upFailed=[];
-  $('#upT').textContent=`Uploading 0 of ${n}…`;$('#upBar').style.width='0';$('#upBar').parentNode.hidden=false;
+  $('#upT').textContent=`Uploading 0 of ${n}…`;
+  $('#upBar').style.width='0';
+  $('#upBar').parentNode.hidden=false;
   $('#upQ').firstChild.textContent=n>1?`Which moment are these ${n}?`:'Which moment is this?';
   $('#tagMsg').textContent=capCat?`✓ Saved to ${capCat}`:'';
   $('#upErr').hidden=$('#upRetry').hidden=true;
@@ -619,159 +636,132 @@ async function uploadFiles(list){
     if(r.err){bad++;last=r.err;upFailed.push(list[i]);tiles[i].className='fail'}
     else{ok++;loaded[i]=list[i].size;tiles[i].className='done';
       const d={id:r.id,cat};b.done.push(d);
-      if(b.cat!==cat&&r.id)tagItem(r.id,b.cat).then(k=>{if(k)d.cat=b.cat})}   // a moment was tapped while this one was uploading
+      if(b.cat!==cat&&r.id)tagItem(r.id,b.cat).then(k=>{if(k)d.cat=b.cat})}
     paint()}};
   await Promise.all([worker(),worker(),worker()]);
   b.finished=true;if(ok)markDid();
-  st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload.</div>`
-    :`<div class="msg ok">✓ ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Album → <a href="#album" data-mine>Mine</a> lets you delete it or change its moment.</small></div>`;
-  if(batch!==b)return;                           // a newer batch took over the sheet
+  st.innerHTML=bad?`<div class="msg err">${bad} file(s) didn't upload.</div>`:`<div class="msg ok">✓ ${ok} uploaded. <a href="#album">See the album</a><br><small style="color:var(--soft)">Picked the wrong one? Album → <a href="#album" data-mine>Mine</a> lets you delete it.</small></div>`;
+  if(batch!==b)return;
   $('#upBar').parentNode.hidden=true;
   $('#upT').textContent=bad?`${ok} uploaded, ${bad} failed`:`✓ ${ok} uploaded`;
   dn.disabled=false;dn.textContent='Done';
   if(bad){$('#upErr').textContent=last+'.';$('#upErr').hidden=$('#upRetry').hidden=false}
-  else if(b.cat)upTimer=setTimeout(()=>{if(batch===b)closeUp()},1600);   // already tagged: close by itself
+  else if(b.cat)upTimer=setTimeout(()=>{if(batch===b)closeUp()},1600);
 }
-['cam','pick'].forEach(id=>$('#'+id).addEventListener('change',e=>{const l=[...e.target.files];e.target.value='';uploadFiles(l)}));
-
-// ----- voice -----
-// States: idle → (asking → countdown) → recording → review → sending → done, plus denied / unsupported.
-// vState() shows only the blocks whose data-s lists the current state.
-const MAXS=180,CIRC=2*Math.PI*77;
-const V={st:'',run:0,stream:null,rec:null,chunks:[],blob:null,t0:0,tick:0,dur:0,discard:false,url:''};
-let perm='unknown',permWatch=false;
-const OS=/iP(hone|ad|od)/.test(navigator.userAgent)?'ios':/Android/i.test(navigator.userAgent)?'android':'other';
-$$('[data-os]').forEach(e=>e.hidden=e.dataset.os!==OS);
-const hint=t=>$('#recHint').textContent=t;
-const idleHint=()=>hint(perm==='granted'?'Tap the mic and start speaking. Up to 3 minutes.':'Tap the mic. Your browser will ask to use the microphone — choose Allow.');
-function vState(s){
-  V.st=s;
-  $$('#v-voice [data-s]').forEach(e=>e.hidden=!e.dataset.s.split(' ').includes(s));
-  const r=$('#rec');r.classList.toggle('live',s==='recording');
-  r.innerHTML=s==='recording'?ic('stop','fill'):ic('mic');
-  r.setAttribute('aria-label',{recording:'Stop recording',asking:'Cancel',countdown:'Cancel'}[s]||'Start recording');
-  if(s!=='recording')$('#rfg').style.strokeDashoffset=CIRC,$('#rfg').style.strokeDasharray=CIRC;
-  if(s==='idle')$('#tNow').textContent='0:00';
-  if(s==='asking')hint('Waiting for permission… choose Allow on the pop-up.');
-  if(s==='countdown')hint('Get ready…');
-  if(s==='recording')hint('Recording… tap ■ when you\'re done.');
-}
-async function checkPerm(){
-  try{
-    const p=await navigator.permissions.query({name:'microphone'});perm=p.state;
-    if(!permWatch){permWatch=true;p.onchange=()=>{perm=p.state;       // the guest fixed it in settings and came back
-      if(p.state==='denied'&&V.st==='idle')vState('denied');
-      else if(p.state!=='denied'&&V.st==='denied'){vState('idle');idleHint()}
-      else if(V.st==='idle')idleHint()}}
-  }catch{}
-}
-async function voiceEnter(){
-  if(['review','sending','done'].includes(V.st))return;
-  if(!window.MediaRecorder||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    $('#vErr').textContent=window.isSecureContext===false?'Voice recording needs a secure (https) page.':'This browser can\'t record audio here. If you opened the link inside another app (Instagram, WhatsApp…), open it in Safari or Chrome instead. You can also choose an audio file below.';
-    return vState('unsupported');
+['cam','pick'].forEach(id=>$('#'+id).addEventListener('change',e=>{
+  const list=[...e.target.files];
+  e.target.value='';
+  if(list.length===1 && list[0].type.startsWith('image/') && !list[0].type.startsWith('image/heic') && !list[0].type.startsWith('image/heif')){
+    openSinglePhotoEditor(list[0]);
+    return;
   }
-  vState('idle');idleHint();
-  await checkPerm();
-  if(V.st==='idle'){if(perm==='denied')vState('denied');else idleHint()}
-}
-function voiceLeave(){
-  const p=$('#prev');if(p)p.pause();
-  if(['asking','countdown','recording'].includes(V.st))cancelRecording();
-}
-const stopStream=()=>{if(V.stream){V.stream.getTracks().forEach(t=>t.stop());V.stream=null}};
-function cancelRecording(){
-  V.run++;clearInterval(V.tick);
-  if(V.rec&&V.rec.state==='recording'){V.discard=true;try{V.rec.stop()}catch{}}
-  stopStream();vState('idle');idleHint();
-}
-function micError(err){
-  stopStream();const n=err&&err.name;
-  if(n==='NotAllowedError'||n==='SecurityError'){perm='denied';return vState('denied')}
-  $('#vErr').textContent=n==='NotFoundError'?'No microphone was found on this device.':n==='NotReadableError'?'The microphone is busy. Close other apps that may be using it, then try again.':'Recording isn\'t working in this browser. You can choose an audio file instead.';
-  vState('unsupported');
-}
-async function startMic(){
-  if(V.st!=='idle')return;
-  const run=++V.run;vState('asking');
-  const t0=Date.now();let s;
-  try{s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
-  catch(err){if(run===V.run)micError(err);return}
-  if(run!==V.run){s.getTracks().forEach(x=>x.stop());return}          // cancelled / left the page while the pop-up was open
-  V.stream=s;perm='granted';
-  if(Date.now()-t0>500){                                              // a permission pop-up was just answered: give them a 3-2-1 to get ready
-    vState('countdown');
-    for(let n=3;n>0;n--){$('#rec').innerHTML=`<span class="cdn">${n}</span>`;await sleep(900);if(run!==V.run)return}
-  }
-  begin();
-}
-function begin(){
-  const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
-  let r;try{r=new MediaRecorder(V.stream,mt?{mimeType:mt}:{})}catch{return micError({name:'NotSupportedError'})}
-  V.rec=r;V.chunks=[];V.discard=false;
-  r.ondataavailable=e=>e.data&&e.data.size&&V.chunks.push(e.data);
-  r.onstop=()=>finish(r);
-  r.start();V.t0=Date.now();vState('recording');
-  clearInterval(V.tick);
-  V.tick=setInterval(()=>{const s=(Date.now()-V.t0)/1000;$('#tNow').textContent=fmt(s);$('#rfg').style.strokeDashoffset=CIRC*(1-Math.min(1,s/MAXS));
-    if(s>=MAXS&&r.state==='recording')r.stop()},200);
-}
-function finish(r){
-  clearInterval(V.tick);stopStream();
-  if(V.discard)return;
-  const secs=(Date.now()-V.t0)/1000,b=new Blob(V.chunks,{type:r.mimeType||'audio/webm'});
-  if(secs<1||!b.size){vState('idle');hint('That was too short. Tap the mic and try again.');return}
-  setBlob(b,Math.round(secs),fmt(secs)+' recorded');
-}
-function setBlob(b,dur,info){
-  if(V.url)URL.revokeObjectURL(V.url);
-  V.blob=b;V.dur=dur;V.url=URL.createObjectURL(b);
-  const p=$('#prev');p.src=V.url;p.onloadedmetadata=()=>{if(!V.dur&&isFinite(p.duration))V.dur=Math.round(p.duration)};
-  $('#revInfo').textContent=info;$('#vStatus').innerHTML='';vState('review');
-}
-$('#rec').onclick=()=>{
-  if(V.st==='idle')startMic();
-  else if(V.st==='recording'&&V.rec&&V.rec.state==='recording')V.rec.stop();
-  else if(V.st==='asking'||V.st==='countdown')cancelRecording();
-};
-$('#cancelRec').onclick=cancelRecording;
-$('#retryMic').onclick=()=>{vState('idle');startMic()};
-$('#retryErr').onclick=()=>{vState('idle');idleHint()};
-$('#redo').onclick=()=>{$('#prev').pause();V.blob=null;$('#vStatus').innerHTML='';vState('idle');idleHint()};
-$('#another').onclick=()=>{$('#vStatus').innerHTML='';vState('idle');idleHint()};
-$('#voiceFile').onchange=e=>{
-  const f=e.target.files[0];e.target.value='';if(!f)return;
-  if(f.size>cfg.maxMb*1048576){$('#vStatus').innerHTML=`<div class="msg err">That file is over ${cfg.maxMb} MB.</div>`;return}
-  setBlob(f,0,f.name);
-};
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&V.st==='recording'&&V.rec&&V.rec.state==='recording')V.rec.stop()});   // keep what was recorded if they switch apps
-$('#sendVoice').onclick=async()=>{
-  if(!V.blob||V.st!=='review')return;
-  const b=$('#sendVoice'),redo=$('#redo'),label=b.textContent;
-  vState('sending');b.disabled=redo.disabled=true;b.textContent='Sending…';$('#vbar').style.width='0';$('#vStatus').innerHTML='';
-  const ext=/mp4|aac/.test(V.blob.type)?'m4a':/ogg/.test(V.blob.type)?'ogg':/mpeg|mp3/.test(V.blob.type)?'mp3':/wav/.test(V.blob.type)?'wav':'webm';
-  const f=V.blob instanceof File?V.blob:new File([V.blob],'voice.'+ext,{type:V.blob.type||'audio/webm'});
-  const e=(await send(f,'',l=>{$('#vbar').style.width=Math.min(100,l/f.size*100)+'%'},'&kind=voice'+(V.dur?'&dur='+V.dur:''))).err;
-  b.disabled=redo.disabled=false;b.textContent=label;
-  if(e){vState('review');$('#vStatus').innerHTML=`<div class="msg err">${esc(e)}. Tap Send to try again.</div>`;return}
-  $('#prev').pause();V.blob=null;if(V.url){URL.revokeObjectURL(V.url);V.url=''}
-  markDid();vState('done');
-};
+  uploadFiles(list);
+}));
 
-// ----- note -----
-$('#sendNote').onclick=async()=>{
-  const text=$('#text').value.trim();if(!text){$('#nStatus').innerHTML='<div class="msg err">Write a few words first.</div>';return}
-  await ready;
-  const r=await fetch('/note',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:me(),text})}).catch(()=>null);
-  if(r&&r.ok){markDid();$('#text').value='';$('#nStatus').innerHTML='<div class="msg ok">Thank you! Your note was sent. You can delete it later from the album → <a href="#album" data-mine style="color:var(--gold)">Mine</a>.</div>'}
-  else $('#nStatus').innerHTML='<div class="msg err">Could not send. Check your connection and try again.</div>';
+const singleEditState={file:null, preset:'original', values:{brightness:100,contrast:100,saturation:100,warmth:0,vignette:0}};
+const singleEditPresets={
+  original:{brightness:100,contrast:100,saturation:100,warmth:0,vignette:0},
+  warm:{brightness:108,contrast:112,saturation:120,warmth:34,vignette:0},
+  soft:{brightness:110,contrast:92,saturation:86,warmth:18,vignette:12},
+  crisp:{brightness:102,contrast:120,saturation:110,warmth:0,vignette:0},
+  noir:{brightness:92,contrast:138,saturation:68,warmth:0,vignette:18}
 };
+function applyPreset(name){
+  const preset=singleEditPresets[name]||singleEditPresets.original;
+  singleEditState.preset=name;
+  Object.assign(singleEditState.values,preset);
+  $$('.preset').forEach(btn=>btn.classList.toggle('on',btn.dataset.preset===name));
+  $$('.edit-slider').forEach(input=>{input.value=singleEditState.values[input.dataset.key];updateSliderLabel(input.dataset.key, input.value)});
+  renderSingleEditPreview();
+}
+function updateSliderLabel(key,val){
+  const label=$(`#${key}Value`); if(label){label.textContent=key==='warmth'||key==='vignette'?val:val+'%'} }
+}
+function renderSingleEditPreview(){
+  const canvas=$('#editCanvas'); const file=singleEditState.file; if(!canvas||!file) return;
+  const img=new Image(); const objUrl=URL.createObjectURL(file);
+  img.onload=()=>{
+    const ctx=canvas.getContext('2d');
+    const aspect=img.naturalWidth/img.naturalHeight;
+    const maxW=900, maxH=900;
+    let w=maxW, h=maxH;
+    if(aspect > 1){h=Math.round(maxW/aspect);} else {w=Math.round(maxH*aspect);} 
+    canvas.width=w; canvas.height=h;
+    ctx.clearRect(0,0,w,h);
+    ctx.filter=`brightness(${singleEditState.values.brightness}%) contrast(${singleEditState.values.contrast}%) saturate(${singleEditState.values.saturation}%)`;
+    ctx.drawImage(img,0,0,w,h);
+    if(singleEditState.values.warmth>0){
+      const warm=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*0.12,w/2,h/2,Math.max(w,h)*0.9);
+      warm.addColorStop(0,`rgba(255, 182, 80, ${singleEditState.values.warmth/100 * 0.36})`);
+      warm.addColorStop(1,'rgba(255, 182, 80, 0)');
+      ctx.fillStyle=warm; ctx.fillRect(0,0,w,h);
+    }
+    if(singleEditState.values.vignette>0){
+      const v=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*0.18,w/2,h/2,Math.max(w,h)*0.85);
+      v.addColorStop(0,'rgba(0,0,0,0)');
+      v.addColorStop(1,`rgba(0,0,0,${(singleEditState.values.vignette/50)*0.7})`);
+      ctx.fillStyle=v; ctx.fillRect(0,0,w,h);
+    }
+    URL.revokeObjectURL(objUrl);
+  };
+  img.onerror=()=>{
+    $('#singleEdit').hidden=true;
+    toast('This photo type can\'t be edited here, so it will upload as-is.');
+    uploadFiles([file]);
+  };
+  img.src=objUrl;
+}
+function openSinglePhotoEditor(file){
+  singleEditState.file=file;
+  applyPreset('original');
+  $('#singleEdit').hidden=false;
+  renderSingleEditPreview();
+}
+function skipSingleEdit(){
+  const file=singleEditState.file;if(!file)return $('#singleEdit').hidden=true;
+  $('#singleEdit').hidden=true;
+  uploadFiles([file]);
+}
+function saveSingleEditedPhoto(){
+  const canvas=$('#editCanvas'), file=singleEditState.file;
+  if(!canvas||!file){$('#singleEdit').hidden=true;return;}
+  const btn=$('#editSave'); btn.disabled=true; btn.textContent='Processing…';
+  canvas.toBlob((blob)=>{
+    if(!blob){
+      btn.disabled=false; btn.textContent='Use this photo';
+      uploadFiles([file]);
+      $('#singleEdit').hidden=true;
+      return;
+    }
+    const filtered = new File([blob], (file.name||'photo.jpg').replace(/\.[^/.]+$/, '')+'.jpg', { type: 'image/jpeg' });
+    $('#singleEdit').hidden=true;
+    uploadFiles([filtered]);
+  }, 'image/jpeg', 0.92);
+}
 
-// the invitation (glowing button + top card) goes away once this phone has added something
+$$('.edit-slider').forEach(input=>{
+  input.addEventListener('input',()=>{
+    const key=input.dataset.key, value=Number(input.value);
+    singleEditState.values[key]=value;
+    singleEditState.preset='custom';
+    $$('.preset').forEach(btn=>btn.classList.toggle('on',btn.dataset.preset==='custom'));
+    updateSliderLabel(key, value);
+    renderSingleEditPreview();
+  });
+});
+
+function drawPresetBadges(){
+  // no-op: keep compatibility with the rest of the app state
+}
+
+const syncCap=()=>$$('#capChips .mom').forEach(c=>{const on=!!capCat&&c.dataset.cap===capCat;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on)});
+
+const closeUp=()=>{clearTimeout(upTimer);$('#up').hidden=true};
+
 function refreshInvite(){const did=ls.get('did')==='1';$('#invite').hidden=did;$('nav a.cam').classList.toggle('glow',!did)}
 function markDid(){ls.set('did','1');refreshInvite()}
 refreshInvite();
-let dens=ls.get('dens')==='3'?3:2;                       // 2 = large tiles (default), 3 = small
+let dens=ls.get('dens')==='3'?3:2;
 function applyDens(){$('#grid').classList.toggle('dense',dens===3);$$('.seg button').forEach(b=>{const on=+b.dataset.dens===dens;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
 applyDens();
 route();
